@@ -1,0 +1,61 @@
+# ── Security ──────────────────────────────────────────────
+Options -Indexes
+ServerSignature Off
+
+# ── HTTPS redirect ────────────────────────────────────────
+RewriteEngine On
+RewriteCond %{HTTPS} off
+RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# ── SPA fallback (serve index.html for any 404) ───────────
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^ /index.html [L]
+
+# ── GZIP compression ──────────────────────────────────────
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/plain text/css
+  AddOutputFilterByType DEFLATE application/javascript application/json
+  AddOutputFilterByType DEFLATE image/svg+xml
+  AddOutputFilterByType DEFLATE font/woff font/woff2
+</IfModule>
+
+# ── Browser caching ───────────────────────────────────────
+<IfModule mod_expires.c>
+  ExpiresActive On
+
+  # Hashed JS/CSS (content-addressed by Vite) — cache 1 year
+  <FilesMatch "\.(js|css)$">
+    ExpiresDefault "access plus 1 year"
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+
+  # Images and fonts — cache 30 days
+  <FilesMatch "\.(png|jpg|jpeg|gif|webp|svg|ico|woff|woff2|ttf)$">
+    ExpiresDefault "access plus 30 days"
+    Header set Cache-Control "public, max-age=2592000"
+  </FilesMatch>
+
+  # Video — cache 7 days
+  <FilesMatch "\.(mp4|webm)$">
+    ExpiresDefault "access plus 7 days"
+    Header set Cache-Control "public, max-age=604800"
+  </FilesMatch>
+
+  # HTML — always revalidate
+  <FilesMatch "\.html$">
+    ExpiresDefault "access plus 0 seconds"
+    Header set Cache-Control "no-cache, must-revalidate"
+  </FilesMatch>
+</IfModule>
+
+# ── MIME types ────────────────────────────────────────────
+<IfModule mod_mime.c>
+  AddType application/javascript   .js .mjs
+  AddType text/css                 .css
+  AddType image/webp               .webp
+  AddType image/avif               .avif
+  AddType font/woff                .woff
+  AddType font/woff2               .woff2
+  AddType video/mp4                .mp4
+</IfModule>
