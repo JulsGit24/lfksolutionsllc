@@ -77,8 +77,8 @@ export const PlumbingLayer = () => (
       ))}
       {/* Shutoff valve */}
       <g transform={`translate(${GABLE_RIDGE_X},360)`}>
-        <circle r="22" fill="none" stroke="#1B5E35" strokeWidth="3" />
-        <rect x="-16" y="-3" width="32" height="6" rx="3" fill="#1B5E35" />
+        <circle r="22" fill="none" stroke="#003E1E" strokeWidth="3" />
+        <rect x="-16" y="-3" width="32" height="6" rx="3" fill="#003E1E" />
       </g>
 
       {/* Underground supply line */}
@@ -280,8 +280,8 @@ export const FacadeLayer = () => (
       <line x1="480" y1="500" x2="480" y2="660" stroke="#161616" strokeWidth="2.5" />
       <rect x="438" y="510" width="34" height="60" fill="none" stroke="#161616" strokeWidth="1.5" />
       <rect x="488" y="510" width="34" height="60" fill="none" stroke="#161616" strokeWidth="1.5" />
-      <circle cx="520" cy="582" r="3" fill="#D4891A" />
-      <circle cx="440" cy="582" r="3" fill="#D4891A" />
+      <circle cx="520" cy="582" r="3" fill="#FAA747" />
+      <circle cx="440" cy="582" r="3" fill="#FAA747" />
 
       {/* Steps + brick walkway */}
       <rect x="420" y="660" width="120" height="10" fill="#f4efe2" />

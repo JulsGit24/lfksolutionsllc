@@ -148,3 +148,6 @@ docs/
 ffmpeg_extracted/
 *.zip
 .claude
+changes/
+deploy/
+**/_unused/**

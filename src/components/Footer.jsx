@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 
 const JOBBER_URL =
@@ -6,12 +6,60 @@ const JOBBER_URL =
 
 const Footer = () => {
   const { t } = useTranslation();
+  const footerVideoRef = useRef(null);
+
+  /* ── Force-play footer video on tablets ──
+     Same fix as Hero: programmatic .play() + IntersectionObserver
+     so the video plays when visible and pauses off-screen. */
+  useEffect(() => {
+    const vid = footerVideoRef.current;
+    if (!vid) return;
+
+    const tryPlay = () => {
+      vid.muted = true;
+      const p = vid.play();
+      if (p && typeof p.catch === 'function') {
+        p.catch(() => {
+          const kick = () => {
+            vid.play().catch(() => {});
+            document.removeEventListener('touchstart', kick, true);
+            document.removeEventListener('scroll', kick, true);
+          };
+          document.addEventListener('touchstart', kick, { once: true, capture: true, passive: true });
+          document.addEventListener('scroll', kick, { once: true, capture: true, passive: true });
+        });
+      }
+    };
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          tryPlay();
+        } else {
+          vid.pause();
+        }
+      },
+      { threshold: 0.1 }
+    );
+    observer.observe(vid);
+
+    return () => observer.disconnect();
+  }, []);
 
   return (
     <div className="video-footer-wrapper transparent-section" style={{ position: 'relative', overflow: 'hidden', minHeight: '80vh', display: 'flex', alignItems: 'center' }}>
-      <video autoPlay loop muted playsInline className="footer-video-bg" style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover', zIndex: 0 }}>
-        <source src="/assets/hero_video.mp4" type="video/mp4" />
-      </video>
+      <video
+        ref={footerVideoRef}
+        src="/assets/home/hero/hero-video.mp4"
+        poster="/assets/home/hero/hero-poster.jpg"
+        preload="auto"
+        autoPlay
+        loop
+        muted
+        playsInline
+        className="footer-video-bg"
+        style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover', zIndex: 0 }}
+      />
       <div style={{ position: 'absolute', inset: 0, backgroundColor: 'rgba(0,0,0,0.5)', zIndex: 1 }} />
       <div className="video-footer-content" style={{ position: 'relative', zIndex: 2, width: '100%', display: 'flex', flexDirection: 'column', height: '100%' }}>
 
@@ -28,7 +76,7 @@ const Footer = () => {
                 href={JOBBER_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                style={{ background: '#1B5E35', color: 'white', padding: '16px 32px', borderRadius: '30px', textDecoration: 'none', fontWeight: 600, boxShadow: '0 0 28px rgba(27,94,53,0.3)' }}
+                style={{ background: '#003E1E', color: 'white', padding: '16px 32px', borderRadius: '30px', textDecoration: 'none', fontWeight: 600, boxShadow: '0 0 28px rgba(0,62,30,0.3)' }}
               >
                 {t('footer.ctaPrimary')}
               </a>
@@ -44,39 +92,52 @@ const Footer = () => {
 
         <footer style={{ padding: '64px 24px 24px 24px', borderTop: '1px solid rgba(255,255,255,0.15)' }}>
           <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '48px', marginBottom: '48px' }}>
+            {/* Brand mark + tagline */}
+            <div style={{ marginBottom: '40px' }}>
+              <img
+                src="/assets/brand/logo-badge-white.svg"
+                alt="LFK Solutions"
+                style={{ height: '56px', width: '56px', objectFit: 'contain', marginBottom: '16px', display: 'block' }}
+              />
+              <p style={{ color: 'rgba(255,255,255,0.72)', lineHeight: 1.65, maxWidth: '46ch' }}>
+                {t('footer.tagline')}
+              </p>
+            </div>
 
-              {/* Brand — logo rendered in its natural dark mark on the light footer */}
-              <div>
-                <img
-                  src="/assets/logo-white.svg"
-                  alt="LFK Solutions"
-                  style={{
-                    height: '48px',
-                    marginBottom: '16px',
-                    display: 'block',
-                  }}
-                />
-                <p style={{ color: 'rgba(29,29,31,0.65)', lineHeight: 1.65 }}>
-                  {t('footer.tagline')}
-                </p>
-              </div>
+            <div className="ft-layout" style={{ marginBottom: '48px' }}>
 
+              {/* Business fact sheet */}
               <div>
-                <h4 style={{ color: '#1d1d1f', marginBottom: '24px' }}>{t('footer.company')}</h4>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                  <a href="#service-residential" style={{ color: 'rgba(255,255,255,0.72)', textDecoration: 'none' }}>{t('footer.services')}</a>
-                  <a href="#portfolio" style={{ color: 'rgba(255,255,255,0.72)', textDecoration: 'none' }}>{t('footer.ourWork')}</a>
+                <div className="ft-row">
+                  <div className="ft-label">{t('footer.servicesLabel')}</div>
+                  <div className="ft-value">{t('footer.servicesValue')}</div>
+                </div>
+                <div className="ft-row">
+                  <div className="ft-label">{t('footer.basedInLabel')}</div>
+                  <div className="ft-value">{t('footer.basedInValue')}</div>
+                </div>
+                <div className="ft-row">
+                  <div className="ft-label">{t('footer.servingLabel')}</div>
+                  <div className="ft-value">{t('footer.servingValue')}</div>
+                </div>
+                <div className="ft-row">
+                  <div className="ft-label">{t('footer.contactLabel')}</div>
+                  <div className="ft-value">
+                    <a href="tel:+17038594908">{t('footer.phone')}</a>
+                    <br />
+                    <a href="mailto:lfksolutions4u@gmail.com">{t('footer.email')}</a>
+                  </div>
                 </div>
               </div>
 
-              <div>
-                <h4 style={{ color: '#1d1d1f', marginBottom: '24px' }}>{t('footer.contact')}</h4>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                  <a href="tel:7038594908" style={{ color: 'rgba(255,255,255,0.72)', textDecoration: 'none' }}>{t('footer.phone')}</a>
-                  <a href="mailto:lfksolutions4u@gmail.com" style={{ color: 'rgba(255,255,255,0.72)', textDecoration: 'none' }}>{t('footer.email')}</a>
-                  <p style={{ color: 'rgba(29,29,31,0.45)', marginTop: '16px' }}>{t('footer.established')}</p>
-                </div>
+              {/* Credential card */}
+              <div className="ft-card">
+                <h3 className="ft-card-title">{t('footer.licenseTitle')}</h3>
+                <ul className="ft-licenses">
+                  {(t('footer.licenses', { returnObjects: true }) || []).map((l) => (
+                    <li key={l} className="ft-license">{l}</li>
+                  ))}
+                </ul>
               </div>
 
             </div>

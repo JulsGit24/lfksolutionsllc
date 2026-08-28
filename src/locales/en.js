@@ -15,8 +15,8 @@ const en = {
     residential: 'Residential',
     and: 'and',
     commercial: 'Commercial',
-    headlineSuffix: 'Plumbing and Remodeling in the DMV.',
-    subheadline: 'Licensed Master Plumber and General Contractor. Residential plumbing, commercial jobs, backflow testing, and full remodeling — done right, on time.',
+    headlineSuffix: 'Plumbing in the DMV.',
+    subheadline: 'Licensed Master Plumber. Residential plumbing, commercial jobs, backflow testing, drain cleaning, and camera inspections — done right, on time.',
     ctaPrimary: 'Get a Free Estimate',
     ctaPhone: '(703) 859-4908',
     ctaEmergency: 'Emergency Plumbing',
@@ -38,24 +38,18 @@ const en = {
       { title: 'Licensed in DC, MD & VA', desc: 'Triple-certified experts authorized to work across the entire DMV area.' },
       { title: 'Bonded & Insured', desc: 'Full liability coverage on every single job for your complete peace of mind.' },
       { title: 'Free Estimates', desc: 'Transparent, no-obligation quotes before any work begins.' },
-      { title: 'Residential & Commercial', desc: 'From home remodels to heavy-duty commercial plumbing systems.' },
+      { title: 'Residential & Commercial', desc: 'From home repairs to heavy-duty commercial plumbing systems.' },
       { title: 'Quality Guaranteed', desc: 'We stand by our master workmanship with rigorous standards.' },
     ],
   },
   services: {
     ctaResidential: 'Explore Residential Services',
-    ctaRemodeling: 'Explore Remodeling Services',
     ctaCommercial: 'Explore Commercial Services',
     items: [
       {
         label: 'Residential',
         title: 'Residential Plumbing',
         body: 'From leaky faucets to full bathroom rough-ins, we handle all residential plumbing repairs, installations, and upgrades. Licensed Master Plumber on every job.',
-      },
-      {
-        label: 'Remodeling',
-        title: 'Remodeling & Renovations',
-        body: 'Kitchen and bathroom remodeling from design to completion. We handle plumbing, fixtures, tile, and general contracting — one team, one point of contact.',
       },
       {
         label: 'Commercial',
@@ -75,18 +69,26 @@ const en = {
     sectionLabel: 'Our Work',
     title: 'Featured Projects',
     projects: [
-      'Bathroom Remodel',
       'Residential Plumbing',
       'Commercial Plumbing',
-      'Kitchen Renovation',
-      'Tile Work',
       'Pipe Systems',
+      'Water Heater Installation',
+      'Bathroom Fixtures',
+      'Drain & Sewer Services',
     ],
     close: 'Close',
   },
   reviews: {
     sectionLabel: 'Testimonials',
     title: 'Customer Reviews',
+    carouselHeading: 'What our customers are saying',
+    // Score shown beside the stars. Reflects the testimonials on this page — swap in
+    // your real Google/Trustpilot rating (and its source label) once you have one.
+    ratingScore: '5.0/5',
+    ratingSourceLabel: 'Verified clients',
+    ratingCountLabel: 'Based on {{count}} client reviews',
+    prev: 'Previous review',
+    next: 'Next review',
     items: [
       { quote: 'Fernando and his team completely redid our bathroom plumbing and the results were flawless. Transparent pricing, professional, and clean work.', author: 'Maria S., Arlington, VA' },
       { quote: 'LFK Solutions handles all the plumbing for our commercial properties in DC. They are reliable, licensed, and always get the job done right.', author: 'David R., Property Manager' },
@@ -97,6 +99,8 @@ const en = {
     sectionLabel: 'Service Areas',
     title: 'The DMV Region',
     subtitle: 'Hover over the map to view specific coverage areas.',
+    viewUS: 'Full U.S. map',
+    viewArea: 'Zoom to service area',
     placeholder: 'Select a region on the map to view detailed service coverage.',
     dc: { title: 'Washington D.C.', desc: 'Serving all quadrants (NW, NE, SW, SE) including Georgetown, Capitol Hill, and downtown commercial districts.' },
     md: { title: 'Maryland', desc: "Full coverage across Montgomery & Prince George's counties, including Bethesda, Silver Spring, and Rockville." },
@@ -105,6 +109,8 @@ const en = {
   faq: {
     sectionLabel: 'FAQ',
     title: 'Common Questions',
+    lead: 'Straight answers about licensing, emergency response, estimates and the areas we cover. If your question is not here, ask us directly and we will answer it.',
+    moreLabel: 'Ask us your question',
     items: [
       { q: 'Are you fully licensed and insured?', a: 'Yes, we hold master plumbing licenses in DC, Maryland, and Virginia. We also carry full liability and bonding insurance for commercial and residential work.' },
       { q: 'Do you offer emergency services?', a: 'Yes, we provide rapid response for plumbing emergencies like burst pipes, major leaks, and severe blockages.' },
@@ -117,7 +123,7 @@ const en = {
     ctaSubtitle: "Get a free estimate today and let's bring your vision to life.",
     ctaPrimary: 'Get a Free Estimate',
     ctaPhone: 'Call (703) 859-4908',
-    tagline: 'Your Trusted Experts in Residential and Commercial Plumbing and Remodeling in the DMV.',
+    tagline: 'Your Trusted Experts in Residential and Commercial Plumbing in the DMV.',
     company: 'Company',
     contact: 'Contact',
     services: 'Services',
@@ -126,6 +132,21 @@ const en = {
     email: 'lfksolutions4u@gmail.com',
     established: 'Established 2015',
     copyright: '© 2026 LFK Solutions LLC. All rights reserved.',
+    servicesLabel: 'Services',
+    servicesValue: 'Residential & commercial plumbing, remodeling, renovations, gas fitting, backflow testing',
+    basedInLabel: 'Based in',
+    basedInValue: '405 Greenstead Drive, Stafford, Virginia 22554',
+    servingLabel: 'Serving',
+    servingValue: 'Stafford, Fredericksburg, Northern Virginia, Washington DC and Maryland',
+    contactLabel: 'Contact',
+    licenseTitle: 'Licensed across three jurisdictions',
+    licenses: [
+      'DC General Contractor',
+      'VA Class A Contractor',
+      'VA Master Plumber & Gasfitter',
+      'WSSC Master & Gasfitter',
+      'Bonded & Insured',
+    ],
   },
   aboutSection: {
     title: 'We do things right.',
@@ -141,27 +162,21 @@ const en = {
     section1Desc: 'We fix it fast. We do it right.',
     section2Label: 'Enterprise',
     section2Title: 'Commercial & Construction',
-    section3Label: 'Remodeling',
-    section3Title: 'Renovations & Structural',
     globalCtaTitle: 'Ready for your estimate?',
     globalCtaButton: 'Contact Us Today',
     residential: [
       { title: "Emergency service call", desc: "Leaks, clogs, burst pipes, broken water heater. We respond fast and fix it properly the first time — no temporary patches." },
-      { title: "Bathroom remodel", desc: "Full bathroom renovations, shower replacements, vanity and toilet installs. We handle everything from rough-in to finish." },
-      { title: "Kitchen plumbing", desc: "Sink and faucet replacement, dishwasher and disposal installation, full kitchen remodel plumbing. Done clean and to spec." },
+      { title: "Bathroom plumbing", desc: "Full bathroom rough-ins, shower valve repairs, vanity and toilet installs. We handle everything cleanly and to code." },
+      { title: "Kitchen plumbing", desc: "Sink and faucet replacement, dishwasher and disposal installation, water line hookups. Done clean and to spec." },
       { title: "Water heater", desc: "Replacement and installation of traditional tank and tankless water heater systems. Licensed, code-compliant, and properly permitted." },
       { title: "Fixture replacement", desc: "Toilets, showers, faucets, lavatory sinks — full swap including removal of old fixtures and cleanup." },
-      { title: "Full home remodel", desc: "Multi-room plumbing for complete home renovations. We coordinate directly with your general contractor and handle all inspections." }
+      { title: "Full home repipe", desc: "Multi-room copper and PEX repiping for complete home upgrades. We coordinate directly with all county inspectors." },
+      { title: "Drain pipe camera inspection", desc: "See exactly what's happening inside your pipes. Our camera inspections locate blockages, damage, and leaks fast — no guesswork, no unnecessary excavation." },
+      { title: "Drain pipe cleaning", desc: "Say goodbye to slow drains. Our water jetter machines blast through grease and debris with high-pressure force, leaving your pipes clean from the inside out." }
     ],
     commercial: [
       { title: "Commercial plumbing", desc: "Full-service commercial installations and repairs for offices, retail spaces, and multi-unit properties. Code documentation provided on every job." },
       { title: "New construction plumbing", desc: "Rough-in and finish plumbing for new builds. We work from blueprints, coordinate with inspectors, and hit every milestone on your timeline." }
-    ],
-    remodeling: [
-      { title: "Kitchen Remodeling", desc: "From custom cabinetry and premium fixture installations to structural adjustments, we manage the entire plumbing and construction process for a flawless finish." },
-      { title: "Bathroom Renovations", desc: "Comprehensive transformations including custom walk-in showers, soaking tubs, and luxury vanity rough-ins. Executed with strict code compliance and master-level precision." },
-      { title: "Basement Finishing", desc: "Converting raw basements into high-end living spaces. We handle underground plumbing, sump pumps, ejector systems, and full bathroom additions." },
-      { title: "Structural Alterations", desc: "Safe, permitted removal of load-bearing walls and complete reconfiguration of plumbing systems to support open-concept luxury designs." }
     ]
   },
   aboutPage: {

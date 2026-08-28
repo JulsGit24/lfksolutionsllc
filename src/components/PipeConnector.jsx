@@ -1,4 +1,4 @@
-import React, { useRef, useMemo, Suspense } from 'react';
+import React, { useRef, useMemo, useState, useEffect, Suspense } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { Environment } from '@react-three/drei';
 import { useScroll } from 'framer-motion';
@@ -60,8 +60,8 @@ function Cap({ x, y }) {
     [],
   );
   return (
-    <mesh position={[x, y, 0]} quaternion={q} scale={1.275}>
-      <cylinderGeometry args={[0.26, 0.26, 0.10, 12, 1]} />
+    <mesh position={[x, y, 0]} quaternion={q}>
+      <cylinderGeometry args={[0.21, 0.21, 0.05, 16, 1]} />
       <meshPhysicalMaterial {...MJ} />
     </mesh>
   );
@@ -163,7 +163,7 @@ function Valve({ x, y, scrub }) {
         <boxGeometry args={[0.45, 0.45, 0.45]} />
         <meshPhysicalMaterial {...MJ} />
       </mesh>
-      
+
       {/* Stem/Thread going through */}
       <group ref={stemRef}>
         <mesh rotation={[Math.PI / 2, 0, 0]}>
@@ -177,7 +177,7 @@ function Valve({ x, y, scrub }) {
             <meshPhysicalMaterial {...MT} />
           </mesh>
         ))}
-        
+
         {/* Wheel assembly attached to stem */}
         <group ref={ref} position={[0, 0, 0.35]}>
           <mesh>
@@ -298,6 +298,15 @@ function TeeScene({ scrub }) {
 
 const SCENES = { straight: StraightScene, elbow: ElbowScene, tee: TeeScene };
 
+// On narrow screens the fixed-size fittings (valve, flanges, caps) eat up a much
+// bigger share of the pipe run than on desktop, making the whole assembly read as
+// short and stubby. Lowering the camera zoom on small viewports reveals more world
+// units across the same canvas width, so the pipe run keeps its desktop proportions
+// instead of collapsing around the hardware.
+function computeZoom(width) {
+  return Math.min(28, Math.max(14, width / 45));
+}
+
 const PipeConnector = ({ variant = 'straight', topPadding = 0 }) => {
   const containerRef = useRef(null);
   const { scrollYProgress } = useScroll({
@@ -306,21 +315,36 @@ const PipeConnector = ({ variant = 'straight', topPadding = 0 }) => {
   });
   const Scene = SCENES[variant] ?? SCENES.straight;
 
+  const [zoom, setZoom] = useState(() => computeZoom(typeof window !== 'undefined' ? window.innerWidth : 1280));
+
+  useEffect(() => {
+    const onResize = () => setZoom(computeZoom(window.innerWidth));
+    window.addEventListener('resize', onResize);
+    return () => window.removeEventListener('resize', onResize);
+  }, []);
+
   return (
     <div
       ref={containerRef}
       aria-hidden="true"
-      style={{ width: '100%', padding: '0 48px', paddingTop: topPadding, lineHeight: 0 }}
+      className="pipe-connector-wrap"
+      style={{ paddingTop: topPadding }}
     >
       <Canvas
         orthographic
-        camera={{ position: [0, 0, 10], zoom: 28, near: 0.1, far: 100 }}
+        camera={{ position: [0, 0, 10], zoom, near: 0.1, far: 100 }}
         style={{ width: '100%', height: '195px', display: 'block' }}
         gl={{ alpha: true, antialias: true }}
         dpr={[1, 2]}
         frameloop="demand"
       >
-        <Environment preset="studio" />
+        {/* Self-hosted rather than `preset="studio"`.
+            drei's presets are fetched from raw.githack.com at runtime, which
+            puts a third-party CDN in the critical path of the home page: an
+            uncacheable cross-origin round trip on every visit, and no
+            reflections at all if that host is slow, down, or blocked. This is
+            the exact same HDR, served from our own domain. */}
+        <Environment files="/assets/env/studio_small_03_1k.hdr" />
 
         {/* Key light — upper right front */}
         <ambientLight intensity={0.4} />

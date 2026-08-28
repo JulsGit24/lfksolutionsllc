@@ -42,8 +42,8 @@ const Loader = () => {
       style={{ position: 'fixed', inset: 0, zIndex: 9999, display: 'flex', justifyContent: 'center', alignItems: 'center' }}
     >
       {/* Green panels (top/bottom) */}
-      <div className="loader-panel top-panel" style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '50%', background: '#083d1c' }} />
-      <div className="loader-panel bottom-panel" style={{ position: 'absolute', bottom: 0, left: 0, width: '100%', height: '50%', background: '#083d1c' }} />
+      <div className="loader-panel top-panel" style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '50%', background: 'var(--primary)' }} />
+      <div className="loader-panel bottom-panel" style={{ position: 'absolute', bottom: 0, left: 0, width: '100%', height: '50%', background: 'var(--primary)' }} />
 
       {/* Logo + progress — sits above the panels */}
       <div className="loader-content" style={{ position: 'relative', zIndex: 10000, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
@@ -101,7 +101,7 @@ const Loader = () => {
           <path
             className="svg-draw-path accent"
             d="M 160 80 L 140 100 L 160 120"
-            stroke="#D4891A"
+            stroke="#FAA747"
             strokeWidth="12"
             fill="none"
             strokeLinecap="round"
@@ -140,7 +140,7 @@ const Loader = () => {
             className="loader-progress-fill"
             style={{
               width: '100%', height: '100%',
-              background: '#D4891A',
+              background: '#FAA747',
               transformOrigin: 'left',
               transform: 'scaleX(0)',
             }}

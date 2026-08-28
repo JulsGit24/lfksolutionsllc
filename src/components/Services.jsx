@@ -4,12 +4,11 @@ import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 
 const IMG_SRCS = [
-  '/assets/residential-plumbing.png',
-  '/assets/remodeling.png',
-  '/assets/commercial_pipelines.png',
+  '/assets/services/residential/residential-plumbing.png',
+  '/assets/services/commercial/commercial-plumbing.png',
 ];
-const IMG_ALTS = ['Residential Plumbing', 'Remodeling', 'Commercial Plumbing'];
-const REVERSE = [false, true, false];
+const IMG_ALTS = ['Residential Plumbing', 'Commercial Plumbing'];
+const REVERSE = [false, true];
 
 const cardVariant = {
   hidden: { opacity: 0, y: 48 },
@@ -28,7 +27,7 @@ const Services = () => {
   return (
     <section id="services" style={{ padding: 'clamp(40px, 5vw, 80px) 0 clamp(80px, 10vw, 160px) 0', position: 'relative' }}>
       <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 24px', width: '100%' }}>
-        {items.map((svc, idx) => (
+        {Array.isArray(items) && items.map((svc, idx) => (
           <motion.div
             key={svc.title}
             initial="hidden"
@@ -40,7 +39,7 @@ const Services = () => {
               gap: '64px',
               alignItems: 'center',
               flexDirection: REVERSE[idx] ? 'row-reverse' : 'row',
-              marginBottom: '160px',
+              marginBottom: idx === items.length - 1 ? '64px' : '160px',
             }}
           >
             {/* Text */}

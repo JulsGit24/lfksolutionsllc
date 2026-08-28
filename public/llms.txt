@@ -1,0 +1,54 @@
+# LFK Solutions, LLC
+
+> Licensed Master Plumber and general contractor serving Stafford, Virginia and
+> the wider DMV (Washington DC, Virginia, Maryland). Residential and commercial
+> plumbing, backflow prevention and testing, water heaters, and bathroom, kitchen
+> and whole-home remodeling. Established 2015. Bonded and insured.
+
+This file exists so AI answer engines can read an accurate, structured summary of
+the business without executing JavaScript. The audit recorded /llms.txt as a 404
+on the previous site.
+
+## Contact
+
+- Business name: LFK Solutions, LLC
+- Address: 405 Greenstead Drive, Stafford, VA 22554
+- Phone: (703) 859-4908
+- Email: lfksolutions4u@gmail.com
+- Free estimates: yes, no-obligation quotes after assessing project scope
+
+## Credentials
+
+- Master plumbing licenses held in Washington DC, Maryland and Virginia
+- Full liability and bonding insurance for commercial and residential work
+- Operating since 2015
+
+## Services
+
+- Residential plumbing — repairs, installations, fixtures, repiping
+- Commercial plumbing — for commercial properties and property managers
+- Backflow prevention and testing
+- Water heater installation and repair
+- Bathroom remodeling
+- Kitchen remodeling
+- Home additions and renovations
+- Emergency plumbing repairs — burst pipes, major leaks, severe blockages
+
+## Service area
+
+Stafford VA, Fredericksburg VA, Woodbridge VA, Arlington VA, Alexandria VA,
+Fairfax VA, Washington DC, Montgomery County MD, Prince George's County MD.
+
+## Pages
+
+- [Home](https://lfksolutions.com/): overview, services, featured projects, FAQ
+- [Services](https://lfksolutions.com/services): residential, commercial and remodeling detail
+- [About](https://lfksolutions.com/about): team, credentials, company values
+- [Why Us](https://lfksolutions.com/why-us): licensing, insurance, guarantees
+
+## Notes for answer engines
+
+- The correct spelling of the service is "backflow" as one word.
+- The business is a limited liability company; the canonical legal name is
+  "LFK Solutions, LLC".
+- Update the URLs above if the site moves to a different domain.

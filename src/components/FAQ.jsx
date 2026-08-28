@@ -3,91 +3,101 @@ import PropTypes from 'prop-types';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 
-const FAQItem = ({ question, answer }) => {
-  const [open, setOpen] = useState(false);
-
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 24 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.3 }}
-      transition={{ duration: 0.6, ease: [0.25, 0.1, 0.25, 1] }}
-      style={{ padding: '28px 0', borderBottom: '1px solid rgba(29,29,31,0.08)' }}
+const FAQItem = ({ question, answer, open, onToggle, id }) => (
+  <div className={`fq-item${open ? ' is-open' : ''}`}>
+    <button
+      type="button"
+      className="fq-q"
+      onClick={onToggle}
+      aria-expanded={open}
+      aria-controls={`${id}-answer`}
+      id={`${id}-question`}
     >
-      <button
-        onClick={() => setOpen(!open)}
-        aria-expanded={open}
-        style={{
-          width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-          background: 'none', border: 'none', color: '#1d1d1f',
-          fontSize: '1.15rem', fontWeight: 600, cursor: 'pointer',
-          textAlign: 'left', padding: 0, gap: '16px',
-        }}
-      >
-        <span>{question}</span>
-        <motion.span
-          animate={{ rotate: open ? 45 : 0 }}
-          transition={{ duration: 0.25 }}
-          style={{ color: '#D4891A', fontSize: '1.5rem', flexShrink: 0, lineHeight: 1 }}
-        >
-          +
-        </motion.span>
-      </button>
+      <span>{question}</span>
+      {/* Literal + / − rather than a rotated glyph: rotating a "+" by 45°
+          produces an "×", which reads as dismiss, not collapse. */}
+      <span className="fq-icon" aria-hidden="true">{open ? '−' : '+'}</span>
+    </button>
 
-      <AnimatePresence initial={false}>
-        {open && (
-          <motion.div
-            key="answer"
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: 'auto', opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.35, ease: [0.25, 0.1, 0.25, 1] }}
-            style={{ overflow: 'hidden' }}
-          >
-            <p style={{ paddingTop: '14px', margin: 0, color: 'rgba(29,29,31,0.65)', lineHeight: 1.75, fontSize: '1rem' }}>
-              {answer}
-            </p>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </motion.div>
-  );
-};
+    <AnimatePresence initial={false}>
+      {open && (
+        <motion.div
+          key="answer"
+          id={`${id}-answer`}
+          role="region"
+          aria-labelledby={`${id}-question`}
+          initial={{ height: 0, opacity: 0 }}
+          animate={{ height: 'auto', opacity: 1 }}
+          exit={{ height: 0, opacity: 0 }}
+          transition={{ duration: 0.32, ease: [0.25, 0.1, 0.25, 1] }}
+          style={{ overflow: 'hidden' }}
+        >
+          <p className="fq-a">{answer}</p>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  </div>
+);
 
 FAQItem.propTypes = {
   question: PropTypes.string.isRequired,
   answer: PropTypes.string.isRequired,
+  open: PropTypes.bool.isRequired,
+  onToggle: PropTypes.func.isRequired,
+  id: PropTypes.string.isRequired,
 };
 
 const Faq = () => {
   const { t } = useTranslation();
   const items = t('faq.items', { returnObjects: true });
+  const list = Array.isArray(items) ? items : [];
+
+  // First question opens by default, matching the reference layout. Clicking an
+  // open question closes it, so the group can also be fully collapsed.
+  const [openIndex, setOpenIndex] = useState(0);
 
   return (
-    <section id="faq" style={{ padding: '160px 0', position: 'relative' }}>
-      <div style={{ maxWidth: '800px', margin: '0 auto', padding: '0 24px' }}>
+    <section id="faq" style={{ padding: 'clamp(100px, 12vw, 160px) 0', position: 'relative' }}>
+      <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 24px' }}>
+        <div className="fq-layout">
 
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.3 }}
-          transition={{ duration: 0.8, ease: [0.25, 0.1, 0.25, 1] }}
-          style={{ textAlign: 'center', marginBottom: '80px' }}
-        >
-          <div style={{ color: 'rgba(29,29,31,0.5)', textTransform: 'uppercase', letterSpacing: '0.15em', marginBottom: '16px', fontSize: '0.8rem', fontWeight: 500 }}>
-            {t('faq.sectionLabel')}
-          </div>
-          <h2 style={{ color: '#1d1d1f', fontSize: 'clamp(2.2rem, 5vw, 3.5rem)', fontWeight: 600, lineHeight: 1.1 }}>
-            {t('faq.title')}
-          </h2>
-        </motion.div>
+          {/* Left — headline, lead, link */}
+          <motion.div
+            initial={{ opacity: 0, y: 32 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.3 }}
+            transition={{ duration: 0.8, ease: [0.25, 0.1, 0.25, 1] }}
+          >
+            <h2 className="fq-title">{t('faq.title')}</h2>
+            <p className="fq-lead">{t('faq.lead')}</p>
+            {/* Points at the contact block rather than a FAQ archive, because no
+                such page exists yet. Repoint this when Tier 1 ships one. */}
+            <a className="fq-more" href="#contact">
+              {t('faq.moreLabel')}
+              <span aria-hidden="true">→</span>
+            </a>
+          </motion.div>
 
-        <div>
-          {items.map((item) => (
-            <FAQItem key={item.q} question={item.q} answer={item.a} />
-          ))}
+          {/* Right — accordion */}
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.15 }}
+            transition={{ duration: 0.7, delay: 0.1, ease: [0.25, 0.1, 0.25, 1] }}
+          >
+            {list.map((item, i) => (
+              <FAQItem
+                key={item.q}
+                id={`faq-${i}`}
+                question={item.q}
+                answer={item.a}
+                open={openIndex === i}
+                onToggle={() => setOpenIndex(openIndex === i ? -1 : i)}
+              />
+            ))}
+          </motion.div>
+
         </div>
-
       </div>
     </section>
   );

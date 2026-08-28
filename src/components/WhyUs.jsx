@@ -5,14 +5,18 @@ import { useTranslation } from 'react-i18next';
 const JOBBER_URL = 'https://clienthub.getjobber.com/hubs/9c82d445-943d-4c4a-9a4d-89953811941a/public/requests/1518206/embedded_new';
 
 
+// Which item gets the brand-green number. Mirrors the single accented tile in the
+// reference layout; change the index to move the emphasis.
+const FEATURED_INDEX = 1;
+
 const listVariant = {
   hidden: {},
-  visible: { transition: { staggerChildren: 0.12, delayChildren: 0.1 } },
+  visible: { transition: { staggerChildren: 0.1, delayChildren: 0.1 } },
 };
 
 const itemVariant = {
-  hidden: { opacity: 0, x: -32 },
-  visible: { opacity: 1, x: 0, transition: { duration: 0.7, ease: [0.25, 0.1, 0.25, 1] } },
+  hidden: { opacity: 0, y: 24 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.25, 0.1, 0.25, 1] } },
 };
 
 const WhyUs = () => {
@@ -20,53 +24,49 @@ const WhyUs = () => {
   const items = t('whyUs.items', { returnObjects: true });
 
   return (
-    <section id="why-us" style={{ padding: '160px 0', position: 'relative' }}>
-      <div style={{ maxWidth: '1000px', margin: '0 auto', padding: '0 24px' }}>
+    <section id="why-us" style={{ padding: 'clamp(100px, 12vw, 160px) 0', position: 'relative' }}>
+      <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 24px' }}>
 
-        <motion.div
-          style={{ textAlign: 'center', marginBottom: '80px' }}
-          initial={{ opacity: 0, y: 40 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.3 }}
-          transition={{ duration: 0.8, ease: [0.25, 0.1, 0.25, 1] }}
-        >
-          <div style={{ color: 'rgba(29,29,31,0.5)', textTransform: 'uppercase', letterSpacing: '0.15em', marginBottom: '16px', fontSize: '0.8rem', fontWeight: 500 }}>
-            {t('whyUs.sectionLabel')}
-          </div>
-          <h2 style={{ color: '#1d1d1f', fontSize: 'clamp(2.2rem, 5vw, 3.5rem)', fontWeight: 600, lineHeight: 1.1 }}>
-            {t('whyUs.title')}
-          </h2>
-        </motion.div>
+        <div className="wcu-layout">
 
-        <motion.div
-          variants={listVariant}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.15 }}
-          style={{ maxWidth: '900px', margin: '0 auto' }}
-        >
-          {items.map((item, i) => (
-            <motion.div
-              key={item.title}
-              variants={itemVariant}
-              style={{
-                display: 'flex',
-                gap: '24px',
-                padding: '32px 0',
-                borderBottom: i === items.length - 1 ? 'none' : '1px solid rgba(29,29,31,0.08)',
-                alignItems: 'flex-start',
-              }}
-            >
-              <div style={{ color: '#D4891A', fontSize: '1.4rem', fontWeight: 300, minWidth: '40px', paddingTop: '2px' }}>
-                0{i + 1}
-              </div>
-              <div>
-                <h3 style={{ fontSize: '1.45rem', marginBottom: '8px', fontWeight: 600, color: '#1d1d1f' }}>{item.title}</h3>
-                <p style={{ color: 'rgba(29,29,31,0.62)', fontSize: '1.05rem', lineHeight: 1.7 }}>{item.desc}</p>
-              </div>
-            </motion.div>
-          ))}
-        </motion.div>
+          {/* Left ── label, accent rule, headline */}
+          <motion.div
+            initial={{ opacity: 0, y: 32 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.3 }}
+            transition={{ duration: 0.8, ease: [0.25, 0.1, 0.25, 1] }}
+          >
+            <div className="wcu-eyebrow">{t('whyUs.sectionLabel')}</div>
+            <div className="wcu-rule" />
+            <h2 className="wcu-title">{t('whyUs.title')}</h2>
+          </motion.div>
+
+          {/* Right ── numbered reasons */}
+          <motion.div
+            className="wcu-grid"
+            variants={listVariant}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.15 }}
+          >
+            {items.map((item, i) => (
+              <motion.div
+                key={item.title}
+                variants={itemVariant}
+                className={`wcu-item${i === FEATURED_INDEX ? ' is-featured' : ''}`}
+              >
+                <div className="wcu-num" aria-hidden="true">
+                  {String(i + 1).padStart(2, '0')}
+                </div>
+                <div>
+                  <h3 className="wcu-item-title">{item.title}</h3>
+                  <p className="wcu-item-desc">{item.desc}</p>
+                </div>
+              </motion.div>
+            ))}
+          </motion.div>
+
+        </div>
 
         <motion.div
           initial={{ opacity: 0, y: 24 }}
@@ -82,22 +82,22 @@ const WhyUs = () => {
             style={{
               display: 'inline-block',
               padding: '16px 32px',
-              background: '#D4891A',
+              background: 'var(--primary)',
               color: '#fff',
               borderRadius: '9999px',
               textDecoration: 'none',
               fontWeight: 600,
               fontSize: '1.05rem',
-              boxShadow: '0 4px 14px rgba(212, 137, 26, 0.3)',
+              boxShadow: '0 4px 14px rgba(0, 62, 30, 0.25)',
               transition: 'transform 0.2s, background 0.2s',
             }}
             onMouseEnter={e => {
               e.currentTarget.style.transform = 'scale(1.05)';
-              e.currentTarget.style.background = '#b87514';
+              e.currentTarget.style.background = 'var(--primary-hover)';
             }}
             onMouseLeave={e => {
               e.currentTarget.style.transform = 'scale(1)';
-              e.currentTarget.style.background = '#D4891A';
+              e.currentTarget.style.background = 'var(--primary)';
             }}
           >
             {t('nav.freeEstimate')}

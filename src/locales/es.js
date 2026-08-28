@@ -15,8 +15,8 @@ const es = {
     residential: 'Residencial',
     and: 'y',
     commercial: 'Comercial',
-    headlineSuffix: 'Plomería y Remodelación en el DMV.',
-    subheadline: 'Maestro Plomero y Contratista General con Licencia. Plomería residencial, trabajos comerciales, pruebas de reflujo y remodelación completa — bien hecho, a tiempo.',
+    headlineSuffix: 'Plomería en el DMV.',
+    subheadline: 'Maestro Plomero con Licencia. Plomería residencial, trabajos comerciales, pruebas de reflujo, limpieza de drenajes e inspección con cámara — bien hecho, a tiempo.',
     ctaPrimary: 'Obtener Presupuesto Gratis',
     ctaPhone: '(703) 859-4908',
     ctaEmergency: 'Plomería de Emergencia',
@@ -38,24 +38,18 @@ const es = {
       { title: 'Licencia en DC, MD y VA', desc: 'Expertos con triple certificación autorizados para trabajar en toda el área del DMV.' },
       { title: 'Afianzado y Asegurado', desc: 'Cobertura de responsabilidad total en cada trabajo para su completa tranquilidad.' },
       { title: 'Presupuestos Gratis', desc: 'Cotizaciones transparentes sin compromiso antes de comenzar cualquier trabajo.' },
-      { title: 'Residencial y Comercial', desc: 'Desde remodelaciones del hogar hasta sistemas de plomería comercial de alto rendimiento.' },
+      { title: 'Residencial y Comercial', desc: 'Desde reparaciones del hogar hasta sistemas de plomería comercial de alto rendimiento.' },
       { title: 'Calidad Garantizada', desc: 'Respaldamos nuestra maestría artesanal con estándares rigurosos.' },
     ],
   },
   services: {
     ctaResidential: 'Explorar Servicios Residenciales',
-    ctaRemodelación: 'Explorar Servicios de Remodelación',
-    ctaComercial: 'Explorar Servicios Comerciales',
+    ctaCommercial: 'Explorar Servicios Comerciales',
     items: [
       {
         label: 'Residencial',
         title: 'Plomería Residencial',
         body: 'Desde grifos con goteo hasta obras en bruto de baño completo, manejamos todas las reparaciones, instalaciones y mejoras de plomería residencial. Maestro Plomero con Licencia en cada trabajo.',
-      },
-      {
-        label: 'Remodelación',
-        title: 'Remodelación y Renovaciones',
-        body: 'Remodelación de cocinas y baños desde el diseño hasta la finalización. Manejamos plomería, accesorios, azulejos y contratación general — un equipo, un punto de contacto.',
       },
       {
         label: 'Comercial',
@@ -75,18 +69,26 @@ const es = {
     sectionLabel: 'Nuestros Trabajos',
     title: 'Proyectos Destacados',
     projects: [
-      'Remodelación de Baño',
       'Plomería Residencial',
       'Plomería Comercial',
-      'Renovación de Cocina',
-      'Trabajo de Azulejos',
       'Sistemas de Tuberías',
+      'Instalación de Calentadores',
+      'Accesorios de Baño',
+      'Servicios de Drenaje y Alcantarillado',
     ],
     close: 'Cerrar',
   },
   reviews: {
     sectionLabel: 'Testimonios',
     title: 'Reseñas de Clientes',
+    carouselHeading: 'Lo que dicen nuestros clientes',
+    // Puntuación mostrada junto a las estrellas. Refleja los testimonios de esta
+    // página. Reemplácelo por su calificación real de Google/Trustpilot cuando la tenga.
+    ratingScore: '5.0/5',
+    ratingSourceLabel: 'Clientes verificados',
+    ratingCountLabel: 'Basado en {{count}} reseñas de clientes',
+    prev: 'Reseña anterior',
+    next: 'Siguiente reseña',
     items: [
       { quote: 'Fernando y su equipo rehízo completamente la plomería de nuestro baño y los resultados fueron impecables. Precios transparentes, profesional y trabajo limpio.', author: 'Maria S., Arlington, VA' },
       { quote: 'LFK Solutions maneja toda la plomería de nuestras propiedades comerciales en DC. Son confiables, con licencia y siempre hacen el trabajo correctamente.', author: 'David R., Administrador de Propiedades' },
@@ -97,12 +99,16 @@ const es = {
     sectionLabel: 'Áreas de Servicio',
     title: 'La Región DMV',
     subtitle: 'Pase el cursor sobre el mapa para ver las áreas de cobertura específicas.',
+    viewUS: 'Mapa completo de EE. UU.',
+    viewArea: 'Acercar al área de servicio',
     placeholder: 'Seleccione una región en el mapa para ver la cobertura de servicio detallada.',
     dc: { title: 'Washington D.C.', desc: 'Servimos todos los cuadrantes (NW, NE, SW, SE) incluyendo Georgetown, Capitol Hill y los distritos comerciales del centro.' },
     md: { title: 'Maryland', desc: "Cobertura completa en los condados de Montgomery y Prince George's, incluyendo Bethesda, Silver Spring y Rockville." },
     va: { title: 'Virginia', desc: 'Amplio servicio en Arlington, Alexandria, Fairfax y las regiones circundantes del norte de Virginia.' },
   },
   faq: {
+    lead: 'Respuestas claras sobre licencias, servicio de emergencia, presupuestos y las zonas que cubrimos. Si tu pregunta no está aquí, escríbenos y te respondemos directamente.',
+    moreLabel: 'Haznos tu pregunta',
     sectionLabel: 'Preguntas Frecuentes',
     title: 'Preguntas Comunes',
     items: [
@@ -117,7 +123,7 @@ const es = {
     ctaSubtitle: 'Obtenga un presupuesto gratuito hoy y hagamos realidad su visión.',
     ctaPrimary: 'Obtener Presupuesto Gratis',
     ctaPhone: 'Llamar al (703) 859-4908',
-    tagline: 'Sus Expertos de Confianza en Plomería y Remodelación Residencial y Comercial en el DMV.',
+    tagline: 'Sus Expertos de Confianza en Plomería Residencial y Comercial en el DMV.',
     company: 'Empresa',
     contact: 'Contacto',
     services: 'Servicios',
@@ -126,6 +132,21 @@ const es = {
     email: 'lfksolutions4u@gmail.com',
     established: 'Establecido en 2015',
     copyright: '© 2026 LFK Solutions LLC. Todos los derechos reservados.',
+    servicesLabel: 'Servicios',
+    servicesValue: 'Plomería residencial y comercial, remodelaciones, renovaciones, gasfitería, pruebas de reflujo',
+    basedInLabel: 'Ubicados en',
+    basedInValue: '405 Greenstead Drive, Stafford, Virginia 22554',
+    servingLabel: 'Cobertura',
+    servingValue: 'Stafford, Fredericksburg, Norte de Virginia, Washington DC y Maryland',
+    contactLabel: 'Contacto',
+    licenseTitle: 'Con licencia en tres jurisdicciones',
+    licenses: [
+      'Contratista General de DC',
+      'Contratista Clase A de VA',
+      'Maestro Plomero y Gasfitter de VA',
+      'Maestro y Gasfitter WSSC',
+      'Asegurado y Afianzado',
+    ],
   },
   aboutSection: {
     title: 'Hacemos las cosas bien.',
@@ -141,27 +162,21 @@ const es = {
     section1Desc: 'Lo arreglamos rápido. Lo hacemos bien.',
     section2Label: 'Empresa',
     section2Title: 'Comercial y Construcción',
-    section3Label: 'Remodelación',
-    section3Title: 'Renovaciones y Estructural',
     globalCtaTitle: '¿Listo para su presupuesto?',
     globalCtaButton: 'Contáctenos Hoy',
     residential: [
       { title: "Servicio de emergencia", desc: "Fugas, obstrucciones, tuberías rotas, calentadores averiados. Respondemos rápido y reparamos correctamente a la primera — sin parches temporales." },
-      { title: "Remodelación de baños", desc: "Renovaciones completas de baños, reemplazo de duchas, instalación de tocadores e inodoros. Manejamos todo desde la obra negra hasta el acabado." },
-      { title: "Plomería de cocina", desc: "Reemplazo de fregaderos y grifos, instalación de lavavajillas y trituradores, plomería para remodelación completa de cocinas. Trabajo limpio y según especificaciones." },
+      { title: "Plomería de baños", desc: "Instalaciones completas de baño, reemplazo de válvulas de ducha, lavabos e inodoros. Trabajo limpio y conforme a código." },
+      { title: "Plomería de cocina", desc: "Reemplazo de fregaderos y grifos, instalación de lavavajillas y trituradores, conexiones de agua. Trabajo limpio y según especificaciones." },
       { title: "Calentador de agua", desc: "Reemplazo e instalación de sistemas de calentadores de agua tradicionales y sin tanque. Licenciados, conforme a las normas y con permisos correspondientes." },
       { title: "Reemplazo de accesorios", desc: "Inodoros, duchas, grifos, lavabos — cambio completo incluyendo remoción de accesorios viejos y limpieza." },
-      { title: "Remodelación completa de casa", desc: "Plomería de múltiples habitaciones para renovaciones integrales del hogar. Coordinamos directamente con su contratista general y manejamos todas las inspecciones." }
+      { title: "Reparación y cambio de tuberías", desc: "Reemplazo integral de tuberías de cobre y PEX en toda la vivienda. Coordinamos directamente con todas las inspecciones oficiales." },
+      { title: "Inspección de tuberías con cámara", desc: "Vea exactamente lo que sucede dentro de sus tuberías. Nuestras inspecciones con cámara localizan obstrucciones, daños y fugas rápidamente — sin suposiciones ni excavaciones innecesarias." },
+      { title: "Limpieza de tuberías de drenaje", desc: "Dígale adiós a los drenajes lentos. Nuestras máquinas hidrojet limpian grasa y escombros con fuerza de alta presión, dejando sus tuberías limpias de adentro hacia afuera." }
     ],
     commercial: [
       { title: "Plomería comercial", desc: "Instalaciones y reparaciones comerciales de servicio completo para oficinas, locales comerciales y propiedades de unidades múltiples. Documentación de códigos proporcionada en cada trabajo." },
       { title: "Plomería para construcción nueva", desc: "Obra negra y acabados de plomería para construcciones nuevas. Trabajamos con planos, coordinamos con inspectores y cumplimos cada hito de su cronograma." }
-    ],
-    remodeling: [
-      { title: "Remodelación de Cocinas", desc: "Desde gabinetes personalizados e instalaciones de accesorios premium hasta ajustes estructurales, manejamos todo el proceso de plomería y construcción para un acabado impecable." },
-      { title: "Renovaciones de Baños", desc: "Transformaciones integrales que incluyen duchas a medida, bañeras y plomería de tocadores de lujo. Ejecutado con estricto cumplimiento de códigos y precisión de nivel maestro." },
-      { title: "Acabados de Sótanos", desc: "Convirtiendo sótanos sin terminar en espacios habitables de alta gama. Manejamos plomería subterránea, bombas de sumidero, sistemas eyectores y adiciones de baños completos." },
-      { title: "Alteraciones Estructurales", desc: "Remoción segura y con permisos de muros de carga, y reconfiguración completa de sistemas de plomería para soportar diseños de lujo de concepto abierto." }
     ]
   },
   aboutPage: {

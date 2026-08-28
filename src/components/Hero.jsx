@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useEffect } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
@@ -9,12 +9,70 @@ const JOBBER_URL =
 const Hero = () => {
   const { t } = useTranslation();
   const wrapperRef = useRef(null);
+  const videoRef = useRef(null);
 
   // Scroll tracking for the 400vh container
   const { scrollYProgress } = useScroll({
     target: wrapperRef,
     offset: ['start start', 'end end'],
   });
+
+  /* ── Force-play the video on mount ──
+     iPadOS Safari and some Android tablet browsers silently reject
+     the `autoPlay` HTML attribute even when `muted` + `playsInline`
+     are present. A programmatic .play() after mount is the standard
+     workaround. We also use an IntersectionObserver to pause the
+     video when the hero scrolls out of view (saves battery/CPU on
+     tablets) and resume it when it scrolls back. */
+  useEffect(() => {
+    const vid = videoRef.current;
+    if (!vid) return;
+
+    const tryPlay = () => {
+      // Ensure muted attribute is set at the DOM level (some WebKit
+      // builds ignore the JSX attribute on first paint)
+      vid.muted = true;
+      const p = vid.play();
+      if (p && typeof p.catch === 'function') {
+        p.catch(() => {
+          // Autoplay was blocked — attach a one-time user-gesture
+          // listener so the video starts on the first tap/scroll
+          const kick = () => {
+            vid.play().catch(() => {});
+            document.removeEventListener('touchstart', kick, true);
+            document.removeEventListener('scroll', kick, true);
+          };
+          document.addEventListener('touchstart', kick, { once: true, capture: true, passive: true });
+          document.addEventListener('scroll', kick, { once: true, capture: true, passive: true });
+        });
+      }
+    };
+
+    // Try playing once the browser says it has enough data
+    if (vid.readyState >= 3) {
+      tryPlay();
+    } else {
+      vid.addEventListener('canplay', tryPlay, { once: true });
+    }
+
+    // Pause/resume based on viewport visibility
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          vid.play().catch(() => {});
+        } else {
+          vid.pause();
+        }
+      },
+      { threshold: 0.1 }
+    );
+    observer.observe(vid);
+
+    return () => {
+      vid.removeEventListener('canplay', tryPlay);
+      observer.disconnect();
+    };
+  }, []);
 
   // Text Sequence 1: Main Headline (0-25%)
   const text1Opacity = useTransform(scrollYProgress, [0, 0.15, 0.25], [1, 1, 0]);
@@ -44,9 +102,16 @@ const Hero = () => {
         {/* Sticky Viewport */}
         <div style={{ position: 'sticky', top: 0, height: '100vh', width: '100%', overflow: 'hidden' }}>
           
-          {/* Background Video Layer - Now looping automatically */}
+          {/* Background Video Layer
+              poster paints immediately while the video buffers so the hero
+              is never a black rectangle on a slow connection.
+              preload="auto" ensures enough data is buffered for autoplay
+              on tablet browsers that reject preload="metadata". */}
           <video
-            src="/assets/hero_video.mp4"
+            ref={videoRef}
+            src="/assets/home/hero/hero-video.mp4"
+            poster="/assets/home/hero/hero-poster.jpg"
+            preload="auto"
             autoPlay
             loop
             muted
@@ -98,13 +163,19 @@ const Hero = () => {
                   target="_blank"
                   rel="noopener noreferrer"
                   style={{
-                    background: 'white', color: 'black',
+                    background: 'var(--primary)', color: '#fff',
                     padding: '16px 32px', borderRadius: '9999px',
                     fontSize: '1.1rem', fontWeight: 600, textDecoration: 'none',
-                    transition: 'transform 0.2s',
+                    transition: 'transform 0.2s, background 0.2s',
                   }}
-                  onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.05)'}
-                  onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'}
+                  onMouseEnter={e => {
+                    e.currentTarget.style.transform = 'scale(1.05)';
+                    e.currentTarget.style.background = 'var(--primary-hover)';
+                  }}
+                  onMouseLeave={e => {
+                    e.currentTarget.style.transform = 'scale(1)';
+                    e.currentTarget.style.background = 'var(--primary)';
+                  }}
                 >
                   {t('nav.freeEstimate')}
                 </a>

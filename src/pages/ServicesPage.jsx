@@ -2,6 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
+import Seo from '../components/Seo';
+import { PAGE_META } from '../seo/pageMeta';
+import { serviceSchema, breadcrumbSchema } from '../seo/schema';
+import { SERVICES } from '../seo/siteConfig';
 
 const JOBBER_URL = 'https://clienthub.getjobber.com/hubs/9c82d445-943d-4c4a-9a4d-89953811941a/public/requests/1518206/embedded_new';
 
@@ -61,7 +65,7 @@ const ServiceCard = ({ title, description, imageSrc, isCommercial }) => {
           style={{ 
             fontSize: '1.4rem', 
             fontWeight: 700, 
-            color: isCommercial ? '#D4891A' : '#fff', 
+            color: isCommercial ? '#FAA747' : '#fff', 
             marginBottom: '16px', 
             lineHeight: 1.3,
             textShadow: '0 2px 4px rgba(0,0,0,0.5)',
@@ -115,39 +119,44 @@ const ServicesPage = () => {
 
   const residentialServices = t('servicesPage.residential', { returnObjects: true });
   const resImgs = [
-    "/assets/val_emergency_v2_1783372946804.png",
-    "/assets/val_bathroom_1783372199640.png",
-    "/assets/val_kitchen_v2_1783372966245.png",
-    "/assets/val_water_heater_1783372221255.png",
-    "/assets/val_fixture_1783372228133.png",
-    "/assets/val_full_home_1783372235872.png"
+    "/assets/services/residential/emergency-service.png",
+    "/assets/services/residential/bathroom.png",
+    "/assets/services/residential/kitchen.png",
+    "/assets/services/residential/water-heater.png",
+    "/assets/services/residential/fixture-install.png",
+    "/assets/services/residential/full-home-repipe.png",
+    "/assets/services/residential/camera-inspection.png",
+    "/assets/services/residential/drain-cleaning.png"
   ];
-  if (Array.isArray(residentialServices)) {
-    residentialServices.forEach((svc, i) => svc.img = resImgs[i]);
-  }
+  const residentialList = Array.isArray(residentialServices)
+    ? residentialServices.map((svc, i) => ({ ...svc, img: resImgs[i] }))
+    : [];
 
   const commercialServices = t('servicesPage.commercial', { returnObjects: true });
   const comImgs = [
-    "/assets/val_commercial_v2_1783372952873.png",
-    "/assets/val_new_construction_v2_1783372959439.png"
+    "/assets/services/commercial/commercial-service.png",
+    "/assets/services/commercial/new-construction.png"
   ];
-  if (Array.isArray(commercialServices)) {
-    commercialServices.forEach((svc, i) => svc.img = comImgs[i]);
-  }
-
-  const remodelingServices = t('servicesPage.remodeling', { returnObjects: true });
-  const remodelingImgs = [
-    "/assets/val_kitchen_v2_1783372966245.png",
-    "/assets/val_bathroom_1783372199640.png",
-    "/assets/val_full_home_1783372235872.png",
-    "/assets/val_new_construction_v2_1783372959439.png"
-  ];
-  if (Array.isArray(remodelingServices)) {
-    remodelingServices.forEach((svc, i) => svc.img = remodelingImgs[i]);
-  }
+  const commercialList = Array.isArray(commercialServices)
+    ? commercialServices.map((svc, i) => ({ ...svc, img: comImgs[i] }))
+    : [];
 
   return (
     <div style={{ paddingTop: 'clamp(80px, 10vw, 120px)', background: '#fbfbf9' }}>
+      <Seo
+        {...PAGE_META.services}
+        image="/assets/services/residential/residential-plumbing.png"
+        schemas={[
+          // One Service node per service actually sold. When these become
+          // dedicated pages (BUILD REQUIREMENT SEO-03, Tier 2), give each its
+          // own `path` so the schema points at the page rather than this index.
+          ...SERVICES.map(name => serviceSchema({ name, path: '/services' })),
+          breadcrumbSchema([
+            { name: 'Home', path: '/' },
+            { name: 'Services', path: '/services' },
+          ]),
+        ]}
+      />
 
       {/* Page Headline */}
       <section style={{ padding: 'clamp(40px, 8vw, 80px) 24px 0', textAlign: 'center', background: '#fbfbf9' }}>
@@ -190,17 +199,17 @@ const ServicesPage = () => {
             initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.1 }} variants={staggerContainer}
             style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '32px' }}
           >
-            {Array.isArray(residentialServices) && residentialServices.map((svc) => (
+            {residentialList.map((svc) => (
               <ServiceCard key={svc.title} title={svc.title} description={svc.desc} imageSrc={svc.img} isCommercial={false} />
             ))}
           </motion.div>
         </div>
       </section>
 
-      <DiagonalCut topColor="#fbfbf9" bottomColor="#1B5E35" direction="right" height="120px" />
+      <DiagonalCut topColor="#fbfbf9" bottomColor="#003E1E" direction="right" height="120px" />
 
       {/* 2. Commercial & Construction */}
-      <section id="commercial" style={{ padding: 'clamp(40px, 10vw, 80px) 24px', background: '#1B5E35', color: '#fff' }}>
+      <section id="commercial" style={{ padding: 'clamp(40px, 10vw, 80px) 24px', background: '#003E1E', color: '#fff' }}>
         <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
           <motion.div 
             initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.2 }} variants={staggerContainer}
@@ -218,45 +227,16 @@ const ServicesPage = () => {
             initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.1 }} variants={staggerContainer}
             style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '32px' }}
           >
-            {Array.isArray(commercialServices) && commercialServices.map((svc) => (
+            {commercialList.map((svc) => (
               <ServiceCard key={svc.title} title={svc.title} description={svc.desc} imageSrc={svc.img} isCommercial={true} />
             ))}
           </motion.div>
         </div>
       </section>
 
-      <DiagonalCut topColor="#1B5E35" bottomColor="#fff" direction="left" height="120px" />
+      <DiagonalCut topColor="#003E1E" bottomColor="#fff" direction="left" height="120px" />
 
-      {/* 3. Remodeling Services */}
-      <section id="remodeling" style={{ padding: 'clamp(40px, 10vw, 80px) 24px', background: '#fff' }}>
-        <div style={{ maxWidth: '1280px', margin: '0 auto' }}>
-          <motion.div 
-            initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.2 }} variants={staggerContainer}
-            style={{ textAlign: 'center', marginBottom: 'clamp(40px, 8vw, 80px)' }}
-          >
-            <motion.div variants={fadeInUp} style={{ color: 'rgba(29,29,31,0.5)', textTransform: 'uppercase', letterSpacing: '0.15em', marginBottom: '16px', fontSize: '0.85rem', fontWeight: 600 }}>
-              {t('servicesPage.section3Label')}
-            </motion.div>
-            <motion.h2 variants={fadeInUp} style={{ fontSize: 'clamp(2.5rem, 5vw, 4rem)', fontWeight: 700, color: '#1d1d1f', marginBottom: '24px', letterSpacing: '-0.02em', lineHeight: 1.1 }}>
-              {t('servicesPage.section3Title')}
-            </motion.h2>
-          </motion.div>
-
-          <motion.div 
-            initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.1 }} variants={staggerContainer}
-            style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(clamp(320px, 40%, 600px), 1fr))', gap: '32px' }}
-          >
-            {Array.isArray(remodelingServices) && remodelingServices.map((svc) => (
-              <ServiceCard key={svc.title} title={svc.title} description={svc.desc} imageSrc={svc.img} isCommercial={false} />
-            ))}
-          </motion.div>
-        </div>
-      </section>
-
-      <DiagonalCut topColor="#fff" bottomColor="#fbfbf9" direction="right" height="80px" />
-
-
-      {/* 5. Global CTA */}
+      {/* 3. Global CTA */}
       <section style={{ padding: 'clamp(60px, 10vw, 120px) 24px', textAlign: 'center', background: '#fff' }}>
         <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.3 }} variants={staggerContainer}>
           <motion.h2 variants={fadeInUp} style={{ fontSize: 'clamp(2rem, 4vw, 3rem)', fontWeight: 700, color: '#1d1d1f', marginBottom: '32px', letterSpacing: '-0.02em' }}>
@@ -270,22 +250,22 @@ const ServicesPage = () => {
             style={{
               display: 'inline-block',
               padding: '18px 40px',
-              background: '#D4891A',
+              background: '#FAA747',
               color: '#fff',
               borderRadius: '9999px',
               textDecoration: 'none',
               fontWeight: 600,
               fontSize: '1.15rem',
-              boxShadow: '0 4px 14px rgba(212, 137, 26, 0.3)',
+              boxShadow: '0 4px 14px rgba(250, 167, 71, 0.3)',
               transition: 'transform 0.2s, background 0.2s',
             }}
             onMouseEnter={e => {
               e.currentTarget.style.transform = 'scale(1.05)';
-              e.currentTarget.style.background = '#b87514';
+              e.currentTarget.style.background = '#D08B3B';
             }}
             onMouseLeave={e => {
               e.currentTarget.style.transform = 'scale(1)';
-              e.currentTarget.style.background = '#D4891A';
+              e.currentTarget.style.background = '#FAA747';
             }}
           >
             {t('servicesPage.globalCtaButton')}
