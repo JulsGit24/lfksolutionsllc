@@ -51,7 +51,15 @@ const WhyUs = () => {
           >
             {items.map((item, i) => (
               <motion.div
-                key={item.title}
+                // Index, not item.title: the title is translated, so keying on
+                // it changes every key when the language toggle is clicked.
+                // React then unmounts and remounts each card, which resets this
+                // motion.div to its `hidden` initial state (opacity 0) — and
+                // because the reveal is `whileInView` + `once: true`, anything
+                // the visitor has already scrolled past never re-fires and
+                // stays invisible until a reload. The list is fixed-length and
+                // never reordered, so the index is the stable identity here.
+                key={i}
                 variants={itemVariant}
                 className={`wcu-item${i === FEATURED_INDEX ? ' is-featured' : ''}`}
               >

@@ -78,51 +78,24 @@ const ParallaxSection = ({ children, bgImage, topColor = '#fff', bottomColor = '
 
 
 
-/* ─── Horizontal Scroll Cards (Culture & Values) ─── */
-const CULTURE_CARDS = [
-  {
-    index: '01',
-    title: 'Commitment',
-    text: 'We respect deadlines, expectations and the promises we make to our clients and partners.',
-    bg: '#1d1d1f',
-    accent: '#FAA747',
-    image: '/assets/about/values/commitment.png'
-  },
-  {
-    index: '02',
-    title: 'Strength',
-    text: 'We approach challenges with confidence, discipline and determination without losing respect for the people around us.',
-    bg: '#003E1E',
-    accent: '#fff',
-    image: '/assets/about/values/strength.png'
-  },
-  {
-    index: '03',
-    title: 'Trust',
-    text: 'Our clients know that when a task is assigned to LFK Solutions, it will be handled professionally and completed with care.',
-    bg: '#FAA747',
-    accent: '#fff',
-    image: '/assets/about/values/trust.png'
-  },
-  {
-    index: '04',
-    title: 'Wisdom',
-    text: 'We make thoughtful decisions, remain focused under pressure and avoid reacting emotionally to difficult circumstances.',
-    bg: '#222F30',
-    accent: '#FAA747',
-    image: '/assets/about/values/wisdom.png'
-  },
-  {
-    index: '05',
-    title: 'Respect',
-    text: 'We respect our clients, our team, our profession, our commitments and the standards that guide our work.',
-    bg: '#003E1E',
-    accent: '#fff',
-    image: '/assets/about/values/respect.png'
-  }
+/* ─── Horizontal Scroll Cards (Culture & Values) ───
+   Styling only — no title/text here. Those were previously hardcoded in
+   English directly in this array, so they never translated to Spanish; they
+   now come from aboutPageFull.cultureCards (same order) and are merged in
+   by HorizontalScrollCards below. */
+const CULTURE_CARDS_STYLE = [
+  { index: '01', bg: '#1d1d1f', accent: '#FAA747', image: '/assets/about/values/commitment.png' },
+  { index: '02', bg: '#003E1E', accent: '#fff', image: '/assets/about/values/strength.png' },
+  { index: '03', bg: '#FAA747', accent: '#fff', image: '/assets/about/values/trust.png' },
+  { index: '04', bg: '#222F30', accent: '#FAA747', image: '/assets/about/values/wisdom.png' },
+  { index: '05', bg: '#003E1E', accent: '#fff', image: '/assets/about/values/respect.png' },
 ];
 
 const HorizontalScrollCards = () => {
+  const { t } = useTranslation();
+  const cultureText = t('aboutPageFull.cultureCards', { returnObjects: true });
+  const cards = CULTURE_CARDS_STYLE.map((style, i) => ({ ...style, ...cultureText[i] }));
+
   const containerRef = useRef(null);
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -150,7 +123,7 @@ const HorizontalScrollCards = () => {
           paddingRight: '120px',
           willChange: 'transform'
         }}>
-          {CULTURE_CARDS.map((card) => (
+          {cards.map((card) => (
             <div
               key={card.index}
               style={{

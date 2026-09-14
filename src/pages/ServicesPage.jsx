@@ -171,7 +171,7 @@ const ServicesPage = () => {
               {t('aboutPageFull.introTitle')}
             </motion.h1>
             <motion.p variants={fadeInUp} style={{ fontSize: '1.25rem', lineHeight: 1.8, color: 'rgba(29,29,31,0.7)', maxWidth: '800px', margin: '0 auto' }}>
-              At LFK Solutions, plumbing isn't just a trade—it's an exact science. We bring precision, transparency, and a commitment to doing things right the first time to every home and business in the DMV.
+              {t('aboutPageFull.introText')}
             </motion.p>
           </motion.div>
         </div>
@@ -199,8 +199,13 @@ const ServicesPage = () => {
             initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.1 }} variants={staggerContainer}
             style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '32px' }}
           >
+            {/* Keyed on svc.img (a language-independent asset path), not
+                svc.title: the title is translated, so a title key changes on
+                every language toggle, remounting each card and resetting its
+                `whileInView` + `once: true` reveal to opacity 0 — cards already
+                scrolled past then stay invisible until a reload. */}
             {residentialList.map((svc) => (
-              <ServiceCard key={svc.title} title={svc.title} description={svc.desc} imageSrc={svc.img} isCommercial={false} />
+              <ServiceCard key={svc.img} title={svc.title} description={svc.desc} imageSrc={svc.img} isCommercial={false} />
             ))}
           </motion.div>
         </div>
@@ -228,7 +233,7 @@ const ServicesPage = () => {
             style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '32px' }}
           >
             {commercialList.map((svc) => (
-              <ServiceCard key={svc.title} title={svc.title} description={svc.desc} imageSrc={svc.img} isCommercial={true} />
+              <ServiceCard key={svc.img} title={svc.title} description={svc.desc} imageSrc={svc.img} isCommercial={true} />
             ))}
           </motion.div>
         </div>

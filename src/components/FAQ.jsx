@@ -87,7 +87,11 @@ const Faq = () => {
           >
             {list.map((item, i) => (
               <FAQItem
-                key={item.q}
+                // Matches the id below rather than item.q: the question text is
+                // translated, so keying on it remounts every row on a language
+                // toggle, which both resets the reveal animation and collapses
+                // whichever answer was open. Fixed-length, never reordered.
+                key={`faq-${i}`}
                 id={`faq-${i}`}
                 question={item.q}
                 answer={item.a}

@@ -9,6 +9,14 @@ const IMG_SRCS = [
 ];
 const IMG_ALTS = ['Residential Plumbing', 'Commercial Plumbing'];
 const REVERSE = [false, true];
+// Anchor ids (ServicesPage.jsx §residential/§commercial) and the CTA i18n keys
+// (services.ctaResidential/ctaCommercial), by index. These must stay in English
+// regardless of locale — deriving them from svc.label instead broke on Spanish,
+// where label is "Residencial"/"Comercial": the built key ("ctaResidencial")
+// matched nothing in either locale file (raw key rendered as visible text), and
+// the built anchor ("#residencial") matched no element id on the services page.
+const SLUGS = ['residential', 'commercial'];
+const CTA_KEYS = ['ctaResidential', 'ctaCommercial'];
 
 const cardVariant = {
   hidden: { opacity: 0, y: 48 },
@@ -29,7 +37,14 @@ const Services = () => {
       <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 24px', width: '100%' }}>
         {Array.isArray(items) && items.map((svc, idx) => (
           <motion.div
-            key={svc.title}
+            // SLUGS[idx] ('residential'/'commercial'), not svc.title: the title
+            // is translated, so keying on it changes the key when the language
+            // toggle is clicked. React then remounts the row, resetting this
+            // motion.div and its clipPath image reveal to their `hidden`
+            // initial state — and since the reveal is `whileInView` +
+            // `once: true`, a row the visitor has already scrolled past never
+            // re-fires and stays invisible until a reload.
+            key={SLUGS[idx]}
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, amount: 0.1 }}
@@ -55,7 +70,7 @@ const Services = () => {
               </p>
               {svc.label ? (
                 <Link
-                  to={`/services#${svc.label.toLowerCase()}`}
+                  to={`/services#${SLUGS[idx]}`}
                   style={{
                     display: 'inline-block',
                     marginTop: '24px',
@@ -71,7 +86,7 @@ const Services = () => {
                   onMouseEnter={e => e.currentTarget.style.opacity = '0.8'}
                   onMouseLeave={e => e.currentTarget.style.opacity = '1'}
                 >
-                  {t(`services.cta${svc.label}`)}
+                  {t(`services.${CTA_KEYS[idx]}`)}
                 </Link>
               ) : null}
             </motion.div>

@@ -150,4 +150,6 @@ ffmpeg_extracted/
 .claude
 changes/
 deploy/
+intake/
+workflow/
 **/_unused/**

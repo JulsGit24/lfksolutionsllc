@@ -134,8 +134,12 @@ const Footer = () => {
               <div className="ft-card">
                 <h3 className="ft-card-title">{t('footer.licenseTitle')}</h3>
                 <ul className="ft-licenses">
-                  {(t('footer.licenses', { returnObjects: true }) || []).map((l) => (
-                    <li key={l} className="ft-license">{l}</li>
+                  {/* Index rather than the license string itself: those are
+                      translated, so a text key remounts the whole list on every
+                      language toggle. Harmless today (no animation on these
+                      rows) but the same defect the animated lists had. */}
+                  {(t('footer.licenses', { returnObjects: true }) || []).map((l, i) => (
+                    <li key={i} className="ft-license">{l}</li>
                   ))}
                 </ul>
               </div>

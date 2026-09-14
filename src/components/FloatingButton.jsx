@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 const FloatingButton = () => {
+  const { t } = useTranslation();
   const [isScrolled, setIsScrolled] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
@@ -60,7 +62,7 @@ const FloatingButton = () => {
                   fontWeight: 600,
                   whiteSpace: 'nowrap'
                 }}>
-                  Discover our services
+                  {t('hero.discoverServices')}
                 </div>
                 <div style={{ display: 'flex' }}>
                   <svg width="18" height="48" fill="none" viewBox="0 0 18 48">

@@ -594,7 +594,7 @@ const Navigation = () => {
             href="tel:7038594908"
             className="ib-emergency"
           >
-            Emergency Plumbing
+            {t('hero.ctaEmergency')}
           </a>
 
           <a
@@ -690,7 +690,7 @@ const Navigation = () => {
               fontSize: '1.1rem', textTransform: 'uppercase', textDecoration: 'none',
               fontWeight: 600, textAlign: 'center', width: '100%', maxWidth: '200px'
             }}>
-            Emergency Plumbing
+            {t('hero.ctaEmergency')}
           </a>
           <a
             href={JOBBER_URL}

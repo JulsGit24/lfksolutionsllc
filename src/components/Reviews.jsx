@@ -152,7 +152,11 @@ const Reviews = () => {
               const { name, meta } = splitAuthor(item.author);
               return (
                 <motion.div
-                  key={item.author}
+                  // Index, not item.author: author strings are translated, so
+                  // keying on them remounts every card on a language toggle and
+                  // resets this card's `whileInView` + `once: true` reveal to
+                  // opacity 0. Fixed-length list, never reordered.
+                  key={i}
                   className="rv-item"
                   custom={i}
                   variants={cardVariants}

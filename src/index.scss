@@ -8,6 +8,7 @@
   --primary-hover: #002F17;
   --primary-on-dark: #00924B;
   --secondary: #FAA747;
+  --secondary-hover: #DC933E;
 
   /* Surfaces */
   --canvas: #ffffff;
@@ -335,10 +336,20 @@ h1, h2, h3, h4 {
   display: flex; flex-direction: column; align-items: center; gap: 24px;
 }
 
-.loader-svg-logo { height: 240px; width: auto; }
-.svg-draw-path {
-  stroke-dasharray: 1000;
-  stroke-dashoffset: 1000;
+.loader-logo-mask {
+  width: 150px;
+  height: 150px;
+  clip-path: inset(0% 100% 0% 0%); /* fully hidden from the right = 0% revealed */
+}
+.loader-logo-img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+@media (max-width: 540px) {
+  .loader-logo-mask { width: 110px; height: 110px; }
 }
 
 .loader-progress-bar {

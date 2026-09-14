@@ -68,7 +68,8 @@ export const CREDENTIALS = [
   'DC General Contractor',
   'VA Class A Contractor',
   'VA Master Plumber & Gasfitter',
-  'WSSC Master & Gasfitter',
+  'DC Master Plumber & Gasfitter',
+  'WSSC Master Plumber & Gasfitter',
   'Bonded and insured for residential and commercial work',
 ];
 

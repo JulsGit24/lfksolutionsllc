@@ -9,7 +9,8 @@
     "build": "vite build",
     "sitemap": "node scripts/generate-sitemap.mjs",
     "preview": "vite preview",
-    "map": "node scripts/generate-us-map.mjs"
+    "map": "node scripts/generate-us-map.mjs",
+    "test": "npm run build && node tests/smoke.mjs"
   },
   "dependencies": {
     "@gsap/react": "^2.1.0",
