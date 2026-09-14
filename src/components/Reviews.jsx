@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef, useState, useEffect, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 
@@ -6,64 +6,184 @@ const cardVariants = {
   hidden: { opacity: 0, y: 40 },
   visible: (i) => ({
     opacity: 1, y: 0,
-    transition: { duration: 0.75, delay: i * 0.14, ease: [0.25, 0.1, 0.25, 1] },
+    transition: { duration: 0.7, delay: i * 0.12, ease: [0.25, 0.1, 0.25, 1] },
   }),
 };
+
+// `author` is stored as "Maria S., Arlington, VA" — split the name off the first
+// comma so the card can show name and location on separate lines.
+const splitAuthor = (author = '') => {
+  const at = author.indexOf(',');
+  return at === -1
+    ? { name: author.trim(), meta: '' }
+    : { name: author.slice(0, at).trim(), meta: author.slice(at + 1).trim() };
+};
+
+const initials = (name) =>
+  name.split(/\s+/).filter(Boolean).slice(0, 2).map(w => w[0]).join('').toUpperCase();
+
+const Arrow = ({ dir }) => (
+  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true"
+       style={{ transform: dir === 'prev' ? 'scaleX(-1)' : 'none' }}>
+    <path d="M4 12h15M13 6l6 6-6 6" stroke="currentColor" strokeWidth="1.6"
+          strokeLinecap="round" strokeLinejoin="round" />
+  </svg>
+);
 
 const Reviews = () => {
   const { t } = useTranslation();
   const items = t('reviews.items', { returnObjects: true });
+  const list = Array.isArray(items) ? items : [];
+
+  const scrollerRef = useRef(null);
+  const [progress, setProgress] = useState(0);   // 0–1 across the scrollable width
+  const [atStart, setAtStart] = useState(true);
+  const [atEnd, setAtEnd] = useState(false);
+
+  const readScroll = useCallback(() => {
+    const el = scrollerRef.current;
+    if (!el) return;
+    const max = el.scrollWidth - el.clientWidth;
+    setProgress(max <= 0 ? 1 : el.scrollLeft / max);
+    setAtStart(el.scrollLeft <= 1);
+    setAtEnd(max <= 0 || el.scrollLeft >= max - 1);
+  }, []);
+
+  useEffect(() => {
+    readScroll();
+    const el = scrollerRef.current;
+    if (!el) return;
+    el.addEventListener('scroll', readScroll, { passive: true });
+    window.addEventListener('resize', readScroll, { passive: true });
+    return () => {
+      el.removeEventListener('scroll', readScroll);
+      window.removeEventListener('resize', readScroll);
+    };
+  }, [readScroll, list.length]);
+
+  const step = (dir) => {
+    const el = scrollerRef.current;
+    if (!el) return;
+    const card = el.querySelector('.rv-item');
+    // fall back to ~80% of the viewport width if the card isn't measurable yet
+    const delta = card ? card.getBoundingClientRect().width + 24 : el.clientWidth * 0.8;
+    el.scrollBy({ left: dir === 'next' ? delta : -delta, behavior: 'smooth' });
+  };
 
   return (
-    <section id="reviews" style={{ padding: '160px 0', position: 'relative' }}>
+    <section id="reviews" style={{ padding: 'clamp(100px, 12vw, 160px) 0', position: 'relative' }}>
       <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 24px' }}>
 
+        {/* Headline + rating */}
         <motion.div
-          initial={{ opacity: 0, y: 40 }}
+          className="rv-head"
+          initial={{ opacity: 0, y: 32 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.3 }}
           transition={{ duration: 0.8, ease: [0.25, 0.1, 0.25, 1] }}
-          style={{ textAlign: 'center', marginBottom: '80px' }}
         >
-          <div style={{ color: 'rgba(29,29,31,0.5)', textTransform: 'uppercase', letterSpacing: '0.15em', marginBottom: '16px', fontSize: '0.8rem', fontWeight: 500 }}>
-            {t('reviews.sectionLabel')}
+          <h2 className="rv-title">{t('reviews.title')}</h2>
+
+          <div className="rv-rating">
+            <span className="rv-rating-score">{t('reviews.ratingScore')}</span>
+            <span className="rv-rating-source">
+              <span className="rv-stars" aria-hidden="true" style={{ letterSpacing: 0 }}>★</span>
+              {t('reviews.ratingSourceLabel')}
+            </span>
+            <span>{t('reviews.ratingCountLabel', { count: list.length })}</span>
           </div>
-          <h2 style={{ color: '#1d1d1f', fontSize: 'clamp(2.2rem, 5vw, 3.5rem)', fontWeight: 600, lineHeight: 1.1 }}>
-            {t('reviews.title')}
-          </h2>
         </motion.div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '24px' }}>
-          {items.map((item, i) => (
-            <motion.div
-              key={item.author}
-              custom={i}
-              variants={cardVariants}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, amount: 0.15 }}
-              style={{
-                background: '#fbfbf9',
-                borderRadius: '24px',
-                padding: '40px',
-                border: '1px solid rgba(27,94,53,0.16)',
-                boxShadow: '0 10px 40px rgba(29,29,31,0.06)',
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '20px',
-              }}
-            >
-              <div style={{ color: '#D4891A', fontSize: '1.15rem', letterSpacing: '4px' }}>★★★★★</div>
-              <p style={{ fontSize: '1.05rem', fontStyle: 'italic', lineHeight: 1.75, color: 'rgba(29,29,31,0.74)', flexGrow: 1 }}>
-                &ldquo;{item.quote}&rdquo;
-              </p>
-              <p style={{ color: 'rgba(29,29,31,0.45)', fontWeight: 600, fontSize: '0.85rem', marginTop: 'auto' }}>
-                — {item.author}
-              </p>
-            </motion.div>
-          ))}
-        </div>
+        {/* Carousel */}
+        <div className="rv-carousel">
 
+          {/* Left ── quote mark, heading, controls */}
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.3 }}
+            transition={{ duration: 0.7, ease: [0.25, 0.1, 0.25, 1] }}
+          >
+            <div className="rv-quotemark" aria-hidden="true">&ldquo;</div>
+            <h3 className="rv-carousel-heading">{t('reviews.carouselHeading')}</h3>
+
+            <div className="rv-controls">
+              <button
+                type="button"
+                className="rv-arrow"
+                onClick={() => step('prev')}
+                disabled={atStart}
+                aria-label={t('reviews.prev')}
+                aria-controls="rv-scroller"
+              >
+                <Arrow dir="prev" />
+              </button>
+
+              <div className="rv-track">
+                <div
+                  className="rv-track-fill"
+                  style={{ width: `${Math.max(progress * 100, 12)}%` }}
+                />
+              </div>
+
+              <button
+                type="button"
+                className="rv-arrow"
+                onClick={() => step('next')}
+                disabled={atEnd}
+                aria-label={t('reviews.next')}
+                aria-controls="rv-scroller"
+              >
+                <Arrow dir="next" />
+              </button>
+            </div>
+          </motion.div>
+
+          {/* Right ── scrolling cards */}
+          <div
+            id="rv-scroller"
+            className="rv-scroller"
+            ref={scrollerRef}
+            tabIndex={0}
+            role="group"
+            aria-label={t('reviews.carouselHeading')}
+          >
+            {list.map((item, i) => {
+              const { name, meta } = splitAuthor(item.author);
+              return (
+                <motion.div
+                  // Index, not item.author: author strings are translated, so
+                  // keying on them remounts every card on a language toggle and
+                  // resets this card's `whileInView` + `once: true` reveal to
+                  // opacity 0. Fixed-length list, never reordered.
+                  key={i}
+                  className="rv-item"
+                  custom={i}
+                  variants={cardVariants}
+                  initial="hidden"
+                  whileInView="visible"
+                  viewport={{ once: true, amount: 0.2 }}
+                >
+                  <div className="rv-card">
+                    <p className="rv-quote">{item.quote}</p>
+                    <div className="rv-stars" aria-label="5 out of 5">
+                      <span aria-hidden="true">★★★★★</span>
+                    </div>
+                  </div>
+
+                  <div className="rv-author">
+                    <div className="rv-avatar" aria-hidden="true">{initials(name)}</div>
+                    <div>
+                      <div className="rv-author-name">{name}</div>
+                      {meta && <div className="rv-author-meta">{meta}</div>}
+                    </div>
+                  </div>
+                </motion.div>
+              );
+            })}
+          </div>
+
+        </div>
       </div>
     </section>
   );

@@ -4,10 +4,11 @@
    ============================================================ */
 :root {
   /* Brand */
-  --primary: #1B5E35;
-  --primary-hover: #144929;
-  --primary-on-dark: #3ddc84;
-  --secondary: #D4891A;
+  --primary: #003E1E;
+  --primary-hover: #002F17;
+  --primary-on-dark: #00924B;
+  --secondary: #FAA747;
+  --secondary-hover: #DC933E;
 
   /* Surfaces */
   --canvas: #ffffff;
@@ -335,10 +336,20 @@ h1, h2, h3, h4 {
   display: flex; flex-direction: column; align-items: center; gap: 24px;
 }
 
-.loader-svg-logo { height: 240px; width: auto; }
-.svg-draw-path {
-  stroke-dasharray: 1000;
-  stroke-dashoffset: 1000;
+.loader-logo-mask {
+  width: 150px;
+  height: 150px;
+  clip-path: inset(0% 100% 0% 0%); /* fully hidden from the right = 0% revealed */
+}
+.loader-logo-img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+@media (max-width: 540px) {
+  .loader-logo-mask { width: 110px; height: 110px; }
 }
 
 .loader-progress-bar {
@@ -406,6 +417,16 @@ h1, h2, h3, h4 {
   padding: 0 48px;
   pointer-events: none;
   line-height: 0;
+}
+
+.pipe-connector-wrap {
+  width: 100%;
+  padding: 0 48px;
+  pointer-events: none;
+  line-height: 0;
+}
+@media (max-width: 640px) {
+  .pipe-connector-wrap { padding: 0 20px; }
 }
 
 /* ── Accessibility: reduced-motion ── */
@@ -551,7 +572,87 @@ h1, h2, h3, h4 {
 }
 
 /* ============================================================
-   WHY CHOOSE US — Apple Card Grid
+   WHY CHOOSE US — split layout + ghosted numbered grid
+   Prefixed `wcu-` so none of the legacy `.why-*` rules below are affected.
+   ============================================================ */
+.wcu-layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 48px;
+  align-items: start;
+}
+@media (min-width: 900px) {
+  .wcu-layout {
+    grid-template-columns: minmax(240px, 0.85fr) 1.7fr;
+    gap: 72px;
+  }
+}
+
+/* Left column ── label, accent rule, headline */
+.wcu-eyebrow {
+  color: var(--ink-muted-48);
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+.wcu-rule {
+  width: 40px;
+  height: 2px;
+  background: var(--secondary);
+  margin: 18px 0 26px;
+}
+.wcu-title {
+  color: var(--ink);
+  font-size: clamp(2.1rem, 4.4vw, 3.4rem);
+  font-weight: 600;
+  line-height: 1.06;
+  letter-spacing: -0.02em;
+}
+
+/* Right column ── numbered items, two-up from 620px */
+.wcu-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  column-gap: 40px;
+  row-gap: 44px;
+}
+@media (min-width: 620px) {
+  .wcu-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+.wcu-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 18px;
+}
+.wcu-num {
+  flex-shrink: 0;
+  font-size: clamp(2.5rem, 4.6vw, 3.5rem);
+  font-weight: 700;
+  line-height: 0.85;
+  letter-spacing: -0.04em;
+  font-variant-numeric: tabular-nums;
+  color: rgba(29, 29, 31, 0.16);
+}
+/* One item carries the brand green, mirroring the accent in the reference layout */
+.wcu-item.is-featured .wcu-num { color: var(--primary); }
+
+.wcu-item-title {
+  font-size: 1.02rem;
+  font-weight: 600;
+  color: var(--ink);
+  line-height: 1.3;
+  margin-bottom: 6px;
+}
+.wcu-item-desc {
+  font-size: 0.92rem;
+  line-height: 1.65;
+  color: rgba(29, 29, 31, 0.6);
+}
+
+/* ============================================================
+   WHY CHOOSE US — Apple Card Grid (legacy)
    ============================================================ */
 .why-section {
   z-index: 3;
@@ -684,7 +785,203 @@ h1, h2, h3, h4 {
 }
 
 /* ============================================================
-   REVIEWS — Apple Utility Cards
+   REVIEWS — centred headline, rating row, horizontal card carousel
+   Prefixed `rv-` so the legacy `.reviews-*` rules below are untouched.
+   ============================================================ */
+.rv-head {
+  text-align: center;
+  max-width: 760px;
+  margin: 0 auto;
+}
+.rv-title {
+  color: var(--ink);
+  font-size: clamp(2rem, 4.6vw, 3.4rem);
+  font-weight: 600;
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+}
+
+/* Rating row ── score · stars · source */
+.rv-rating {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 24px;
+  font-size: 0.95rem;
+  color: var(--ink-muted-48);
+}
+.rv-rating-score {
+  color: var(--ink);
+  font-weight: 600;
+}
+.rv-rating-source {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--ink);
+  font-weight: 600;
+}
+
+/* Carousel shell */
+.rv-carousel {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 32px;
+  margin-top: 64px;
+  align-items: start;
+}
+@media (min-width: 900px) {
+  .rv-carousel {
+    grid-template-columns: 260px 1fr;
+    gap: 40px;
+  }
+}
+
+.rv-quotemark {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 5rem;
+  line-height: 0.8;
+  color: rgba(29, 29, 31, 0.18);
+  margin-bottom: 20px;
+}
+.rv-carousel-heading {
+  color: var(--ink);
+  font-size: clamp(1.4rem, 2.4vw, 1.85rem);
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+}
+
+/* Prev / next + progress track */
+.rv-controls {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 28px;
+}
+.rv-arrow {
+  background: none;
+  border: none;
+  padding: 4px;
+  cursor: pointer;
+  color: var(--ink);
+  line-height: 0;
+  border-radius: var(--radius-pill);
+  transition: opacity 0.2s ease, background 0.2s ease;
+}
+.rv-arrow:hover:not(:disabled) { background: rgba(29, 29, 31, 0.06); }
+.rv-arrow:disabled { opacity: 0.25; cursor: default; }
+.rv-arrow:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+
+.rv-track {
+  position: relative;
+  flex: 1;
+  max-width: 120px;
+  height: 2px;
+  background: rgba(29, 29, 31, 0.14);
+  border-radius: 2px;
+}
+.rv-track-fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background: var(--secondary);
+  border-radius: 2px;
+  transition: width 0.25s ease, transform 0.25s ease;
+}
+
+/* Scroller ── cards bleed off the right edge as a scroll affordance */
+.rv-scroller {
+  display: flex;
+  gap: 24px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  padding-bottom: 8px;
+  /* hide the scrollbar; the arrows and track are the affordance */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.rv-scroller::-webkit-scrollbar { display: none; }
+
+.rv-item {
+  flex: 0 0 auto;
+  width: min(320px, 78vw);
+  scroll-snap-align: start;
+}
+
+.rv-card {
+  position: relative;
+  background: var(--canvas);
+  border: 1px solid var(--divider-soft);
+  border-radius: 14px;
+  padding: 26px 26px 22px;
+  box-shadow: 0 10px 30px rgba(29, 29, 31, 0.06);
+}
+/* Speech-bubble tail, bottom-left */
+.rv-card::after {
+  content: '';
+  position: absolute;
+  left: 30px;
+  bottom: -11px;
+  width: 20px;
+  height: 20px;
+  background: var(--canvas);
+  border-right: 1px solid var(--divider-soft);
+  border-bottom: 1px solid var(--divider-soft);
+  transform: rotate(45deg);
+  border-bottom-right-radius: 3px;
+}
+.rv-quote {
+  font-size: 0.95rem;
+  line-height: 1.7;
+  color: rgba(29, 29, 31, 0.72);
+  margin-bottom: 20px;
+}
+.rv-stars {
+  color: var(--primary);
+  font-size: 0.95rem;
+  letter-spacing: 3px;
+}
+
+/* Author sits below the bubble, beside the avatar */
+.rv-author {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 26px 0 0 8px;
+}
+.rv-avatar {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: var(--primary);
+  color: var(--on-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+.rv-author-name {
+  color: var(--ink);
+  font-size: 0.92rem;
+  font-weight: 600;
+  line-height: 1.3;
+}
+.rv-author-meta {
+  color: var(--ink-muted-48);
+  font-size: 0.78rem;
+  line-height: 1.3;
+}
+
+/* ============================================================
+   REVIEWS — Apple Utility Cards (legacy)
    ============================================================ */
 .reviews-section {
   z-index: 6;
@@ -718,7 +1015,168 @@ h1, h2, h3, h4 {
 }
 
 /* ============================================================
-   SERVICE AREAS — Apple Pill Chips
+   SERVICE AREAS — interactive DMV map + location index
+   Prefixed `sa-` so the legacy `.areas-*` rules below are untouched.
+   ============================================================ */
+.sa-layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 40px;
+  align-items: start;
+}
+@media (min-width: 1000px) {
+  .sa-layout {
+    grid-template-columns: minmax(260px, 0.85fr) 1.5fr;
+    gap: 56px;
+  }
+}
+
+.sa-eyebrow {
+  color: var(--ink-muted-48);
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  font-size: 0.78rem;
+  font-weight: 500;
+}
+.sa-title {
+  color: var(--ink);
+  font-size: clamp(1.9rem, 4vw, 3rem);
+  font-weight: 600;
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+  margin-top: 10px;
+}
+.sa-sub {
+  margin-top: 16px;
+  color: rgba(29, 29, 31, 0.6);
+  font-size: 0.95rem;
+  line-height: 1.65;
+  max-width: 40ch;
+}
+
+/* Location index — columns of city names, hover-linked to the map pins */
+.sa-index {
+  margin-top: 28px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 24px;
+}
+@media (max-width: 420px) { .sa-index { grid-template-columns: 1fr; } }
+
+.sa-city {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 7px 0;
+  background: none;
+  border: none;
+  border-bottom: 1px solid var(--divider-soft);
+  font-family: inherit;
+  font-size: 0.88rem;
+  color: rgba(29, 29, 31, 0.72);
+  text-align: left;
+  cursor: pointer;
+  transition: color 0.18s ease;
+}
+.sa-city::before {
+  content: '';
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--divider-soft);
+  flex-shrink: 0;
+  transition: background 0.18s ease, transform 0.18s ease;
+}
+.sa-city:hover,
+.sa-city.is-active { color: var(--primary); font-weight: 600; }
+.sa-city:hover::before,
+.sa-city.is-active::before { background: var(--secondary); transform: scale(1.5); }
+.sa-city:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+
+.sa-viewtoggle {
+  margin-top: 22px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  background: none;
+  border: 1px solid rgba(29, 29, 31, 0.18);
+  border-radius: var(--radius-pill);
+  font-family: inherit;
+  font-size: 0.84rem;
+  font-weight: 600;
+  color: var(--ink);
+  cursor: pointer;
+  transition: border-color 0.2s ease, color 0.2s ease;
+}
+.sa-viewtoggle:hover { border-color: var(--primary); color: var(--primary); }
+.sa-viewtoggle:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+
+/* Map figure — deliberately NOT a card. The rest of the page is white and
+   minimal, so the map sits directly on the page background and the landmass
+   itself carries the brand green. */
+.sa-map {
+  position: relative;
+}
+.sa-map svg { width: 100%; height: auto; display: block; }
+
+.sa-region {
+  transition: fill 0.25s ease, stroke 0.25s ease;
+  cursor: pointer;
+}
+
+.sa-pin { cursor: pointer; }
+.sa-pin circle { transition: r 0.18s ease, fill 0.18s ease; }
+
+/* Hover label — HTML overlay pinned to the pin's position */
+.sa-tip {
+  position: absolute;
+  transform: translate(14px, -50%);
+  background: var(--primary);
+  border-radius: 6px;
+  padding: 5px 10px;
+  color: #fff;
+  font-size: 0.78rem;
+  font-weight: 600;
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.sa-key-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+
+/* Readout — plain text in the left column. It used to be a translucent dark
+   panel laid over the map, which split the section into a light half and a dark
+   half; with the card gone it belongs in the same column as the heading. */
+.sa-readout {
+  margin-top: 26px;
+  max-width: 42ch;
+  /* Reserved so swapping the copy on hover does not shift the page. */
+  min-height: 88px;
+}
+.sa-readout-name {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--ink);
+  font-size: 1.02rem;
+  font-weight: 600;
+  line-height: 1.2;
+}
+.sa-readout-desc {
+  margin-top: 8px;
+  font-size: 0.88rem;
+  line-height: 1.65;
+  color: rgba(29, 29, 31, 0.6);
+}
+/* Stacked layout: nothing sits beside it, so no height needs reserving. */
+@media (max-width: 999px) {
+  .sa-readout { min-height: 0; }
+}
+
+/* ============================================================
+   SERVICE AREAS — Apple Pill Chips (legacy)
    ============================================================ */
 .areas-section {
   background: var(--canvas-parchment) !important;
@@ -745,7 +1203,92 @@ h1, h2, h3, h4 {
 .area-card p { font-size: 0.824rem; color: var(--ink-muted-48); margin: 0; }
 
 /* ============================================================
-   FAQ — Clean Accordion
+   FAQ — split layout, headline left / accordion right
+   Prefixed `fq-` so the legacy `.faq-*` rules below are untouched.
+   ============================================================ */
+.fq-layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 48px;
+  align-items: start;
+}
+@media (min-width: 900px) {
+  .fq-layout {
+    grid-template-columns: minmax(280px, 1fr) 1.35fr;
+    gap: 80px;
+  }
+}
+
+.fq-title {
+  color: var(--ink);
+  font-size: clamp(2.1rem, 4.4vw, 3.2rem);
+  font-weight: 600;
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+}
+.fq-lead {
+  margin-top: 26px;
+  color: rgba(29, 29, 31, 0.6);
+  font-size: 0.98rem;
+  line-height: 1.7;
+  max-width: 42ch;
+}
+.fq-more {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 28px;
+  color: var(--primary);
+  font-weight: 600;
+  font-size: 0.95rem;
+  text-decoration: none;
+  transition: gap 0.2s ease;
+}
+.fq-more:hover { gap: 14px; }
+
+/* Accordion */
+.fq-item { border-bottom: 1px solid var(--divider-soft); }
+
+.fq-q {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  padding: 20px 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  font-family: inherit;
+  font-size: 1.02rem;
+  font-weight: 600;
+  color: var(--ink);
+  line-height: 1.35;
+}
+.fq-q:hover { color: var(--primary); }
+.fq-q:focus-visible { outline: 2px solid var(--primary); outline-offset: 3px; }
+
+.fq-icon {
+  flex-shrink: 0;
+  font-size: 1.35rem;
+  font-weight: 300;
+  line-height: 1;
+  color: var(--ink-muted-48);
+}
+.fq-item.is-open .fq-icon { color: var(--primary); }
+
+.fq-a {
+  padding: 0 0 22px;
+  margin: 0;
+  color: rgba(29, 29, 31, 0.62);
+  font-size: 0.95rem;
+  line-height: 1.7;
+  max-width: 56ch;
+}
+
+/* ============================================================
+   FAQ — Clean Accordion (legacy)
    ============================================================ */
 .faq-section {
   z-index: 8;
@@ -784,6 +1327,82 @@ h1, h2, h3, h4 {
   z-index: 9;
 }
 .cta-actions { margin-top: 40px; }
+
+/* ============================================================
+   FOOTER — business fact sheet + credential card
+   Prefixed `ft-`; sits over the darkened footer video.
+   ============================================================ */
+.ft-layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 40px;
+  align-items: start;
+}
+@media (min-width: 900px) {
+  .ft-layout { grid-template-columns: 1.35fr 1fr; gap: 64px; }
+}
+
+/* Label / value rows */
+.ft-row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 4px;
+  padding: 16px 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.14);
+}
+@media (min-width: 560px) {
+  .ft-row { grid-template-columns: 130px 1fr; gap: 24px; align-items: baseline; }
+}
+.ft-row:first-of-type { border-top: none; }
+
+.ft-label {
+  color: rgba(255, 255, 255, 0.55);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 0.7rem;
+  font-weight: 600;
+}
+.ft-value {
+  color: rgba(255, 255, 255, 0.92);
+  font-size: 0.98rem;
+  line-height: 1.6;
+}
+.ft-value a { color: inherit; text-decoration: none; }
+.ft-value a:hover { text-decoration: underline; }
+
+/* Credential card */
+.ft-card {
+  background: rgba(255, 255, 255, 0.07);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: var(--radius-lg);
+  padding: 28px 30px;
+}
+.ft-card-title {
+  color: #fff;
+  font-size: 1.2rem;
+  font-weight: 600;
+  line-height: 1.25;
+  margin-bottom: 20px;
+}
+.ft-licenses { list-style: none; margin: 0; padding: 0; }
+.ft-license {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 9px 0;
+  color: rgba(255, 255, 255, 0.92);
+  font-size: 0.95rem;
+}
+.ft-license::before {
+  content: '';
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--secondary);
+  flex-shrink: 0;
+}
 
 /* ============================================================
    FOOTER & CTA (Inside Video Wrapper)

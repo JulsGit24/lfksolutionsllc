@@ -1,6 +1,9 @@
 import React, { useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
+import Seo from '../components/Seo';
+import { PAGE_META } from '../seo/pageMeta';
+import { breadcrumbSchema } from '../seo/schema';
 
 const JOBBER_URL = 'https://clienthub.getjobber.com/hubs/9c82d445-943d-4c4a-9a4d-89953811941a/public/requests/1518206/embedded_new';
 
@@ -75,51 +78,24 @@ const ParallaxSection = ({ children, bgImage, topColor = '#fff', bottomColor = '
 
 
 
-/* ─── Horizontal Scroll Cards (Culture & Values) ─── */
-const CULTURE_CARDS = [
-  {
-    index: '01',
-    title: 'Commitment',
-    text: 'We respect deadlines, expectations and the promises we make to our clients and partners.',
-    bg: '#1d1d1f',
-    accent: '#D4891A',
-    image: '/assets/val_commitment_1783286211095.png'
-  },
-  {
-    index: '02',
-    title: 'Strength',
-    text: 'We approach challenges with confidence, discipline and determination without losing respect for the people around us.',
-    bg: '#1B5E35',
-    accent: '#fff',
-    image: '/assets/val_strength_1783286722383.png'
-  },
-  {
-    index: '03',
-    title: 'Trust',
-    text: 'Our clients know that when a task is assigned to LFK Solutions, it will be handled professionally and completed with care.',
-    bg: '#D4891A',
-    accent: '#fff',
-    image: '/assets/val_trust_1783286217181.png'
-  },
-  {
-    index: '04',
-    title: 'Wisdom',
-    text: 'We make thoughtful decisions, remain focused under pressure and avoid reacting emotionally to difficult circumstances.',
-    bg: '#222F30',
-    accent: '#D4891A',
-    image: '/assets/val_wisdom_1783286223376.png'
-  },
-  {
-    index: '05',
-    title: 'Respect',
-    text: 'We respect our clients, our team, our profession, our commitments and the standards that guide our work.',
-    bg: '#1B5E35',
-    accent: '#fff',
-    image: '/assets/val_respect_1783286716370.png'
-  }
+/* ─── Horizontal Scroll Cards (Culture & Values) ───
+   Styling only — no title/text here. Those were previously hardcoded in
+   English directly in this array, so they never translated to Spanish; they
+   now come from aboutPageFull.cultureCards (same order) and are merged in
+   by HorizontalScrollCards below. */
+const CULTURE_CARDS_STYLE = [
+  { index: '01', bg: '#1d1d1f', accent: '#FAA747', image: '/assets/about/values/commitment.png' },
+  { index: '02', bg: '#003E1E', accent: '#fff', image: '/assets/about/values/strength.png' },
+  { index: '03', bg: '#FAA747', accent: '#fff', image: '/assets/about/values/trust.png' },
+  { index: '04', bg: '#222F30', accent: '#FAA747', image: '/assets/about/values/wisdom.png' },
+  { index: '05', bg: '#003E1E', accent: '#fff', image: '/assets/about/values/respect.png' },
 ];
 
 const HorizontalScrollCards = () => {
+  const { t } = useTranslation();
+  const cultureText = t('aboutPageFull.cultureCards', { returnObjects: true });
+  const cards = CULTURE_CARDS_STYLE.map((style, i) => ({ ...style, ...cultureText[i] }));
+
   const containerRef = useRef(null);
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -147,7 +123,7 @@ const HorizontalScrollCards = () => {
           paddingRight: '120px',
           willChange: 'transform'
         }}>
-          {CULTURE_CARDS.map((card) => (
+          {cards.map((card) => (
             <div
               key={card.index}
               style={{
@@ -247,6 +223,17 @@ const AboutPage = () => {
 
   return (
     <div style={{ background: '#fff', color: '#1d1d1f' }}>
+      <Seo
+        {...PAGE_META.about}
+        image="/assets/about/team/fernando.jpg"
+        schemas={[
+          breadcrumbSchema([
+            { name: 'Home', path: '/' },
+            { name: 'About', path: '/about' },
+          ]),
+        ]}
+      />
+
       <section id="about" style={{ padding: 'clamp(80px, 10vw, 160px) 0 0' }}>
         <div style={{ maxWidth: '1000px', margin: '0 auto', padding: '0 24px' }}>
           
@@ -258,9 +245,11 @@ const AboutPage = () => {
             <motion.div variants={fadeInUp} style={{ color: 'rgba(29,29,31,0.5)', textTransform: 'uppercase', letterSpacing: '0.15em', marginBottom: '24px', fontSize: '0.85rem', fontWeight: 600 }}>
               {t('aboutPageFull.introLabel')}
             </motion.div>
-            <motion.h2 variants={fadeInUp} style={{ fontSize: 'clamp(3rem, 5vw, 4.5rem)', fontWeight: 700, letterSpacing: '-0.03em', lineHeight: 1.1, marginBottom: '32px' }}>
+            {/* Page's single H1 — BUILD REQUIREMENT SEO-05. Was an h2, which left
+                this page with no H1 at all. Styling is unchanged. */}
+            <motion.h1 variants={fadeInUp} style={{ fontSize: 'clamp(3rem, 5vw, 4.5rem)', fontWeight: 700, letterSpacing: '-0.03em', lineHeight: 1.1, marginBottom: '32px' }}>
               {t('aboutPageFull.introTitle')}
-            </motion.h2>
+            </motion.h1>
             <motion.p variants={fadeInUp} style={{ fontSize: '1.25rem', lineHeight: 1.8, color: 'rgba(29,29,31,0.7)', maxWidth: '800px', margin: '0 auto' }}>
               {t('aboutPageFull.introText')}
             </motion.p>
@@ -302,7 +291,7 @@ const AboutPage = () => {
             {/* Photo */}
             <motion.div variants={fadeInUp} style={{ display: 'flex', justifyContent: 'center' }}>
               <img
-                src="/assets/fernando.jpg"
+                src="/assets/about/team/fernando.jpg"
                 alt="Fernando — Owner & Licensed Master Plumber"
                 style={{
                   width: '100%',
@@ -322,7 +311,7 @@ const AboutPage = () => {
               <h3 style={{ fontSize: 'clamp(1.8rem, 3vw, 2.5rem)', fontWeight: 600, marginBottom: '8px', color: '#1d1d1f', letterSpacing: '-0.02em' }}>
                 {t('aboutPageFull.meetTitle')}
               </h3>
-              <div style={{ color: '#D4891A', fontWeight: 600, fontSize: '1rem', marginBottom: '24px' }}>
+              <div style={{ color: '#FAA747', fontWeight: 600, fontSize: '1rem', marginBottom: '24px' }}>
                 {t('aboutPageFull.meetRole')}
               </div>
               <p style={{ fontSize: '1.1rem', lineHeight: 1.75, color: 'rgba(29,29,31,0.75)' }}>
@@ -335,7 +324,7 @@ const AboutPage = () => {
 
       {/* 3. The Client Experience (Parallax) */}
       <ParallaxSection 
-        bgImage="/assets/val_trust_1783286217181.png" 
+        bgImage="/assets/about/values/trust.png" 
         topColor="#fbfbf9" 
         bottomColor="#fff"
         topDirection="right"
@@ -351,12 +340,12 @@ const AboutPage = () => {
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '24px' }}>
               {Array.isArray(expList) && expList.map((text, i) => (
                 <motion.div key={i} variants={fadeInUp} style={{ display: 'flex', alignItems: 'flex-start', gap: '16px' }}>
-                  <div style={{ color: '#D4891A', fontSize: '1.2rem', marginTop: '-2px' }}>✦</div>
+                  <div style={{ color: '#FAA747', fontSize: '1.2rem', marginTop: '-2px' }}>✦</div>
                   <div style={{ fontSize: '1.05rem', fontWeight: 500, lineHeight: 1.5, color: 'rgba(255,255,255,0.9)' }}>{text}</div>
                 </motion.div>
               ))}
             </div>
-            <motion.p variants={fadeInUp} style={{ textAlign: 'center', marginTop: '64px', fontSize: '1.2rem', fontWeight: 500, color: '#D4891A' }}>
+            <motion.p variants={fadeInUp} style={{ textAlign: 'center', marginTop: '64px', fontSize: '1.2rem', fontWeight: 500, color: '#FAA747' }}>
               {t('aboutPageFull.expText')}
             </motion.p>
           </motion.div>
@@ -407,7 +396,7 @@ const AboutPage = () => {
 
       {/* 6. Operations, Growth & Vision (Parallax) */}
       <ParallaxSection 
-        bgImage="/assets/commercial_pipelines.png" 
+        bgImage="/assets/services/commercial/commercial-plumbing.png" 
         topColor="#fff" 
         bottomColor="#fff"
         topDirection="left"
@@ -433,7 +422,7 @@ const AboutPage = () => {
                 borderRadius: '20px',
                 textAlign: 'center'
               }}>
-                <h4 style={{ fontSize: '1.3rem', fontWeight: 600, marginBottom: '16px', color: '#D4891A' }}>{t('aboutPageFull.opsHowTitle')}</h4>
+                <h4 style={{ fontSize: '1.3rem', fontWeight: 600, marginBottom: '16px', color: '#FAA747' }}>{t('aboutPageFull.opsHowTitle')}</h4>
                 <p style={{ fontSize: '1.05rem', lineHeight: 1.7, color: 'rgba(255,255,255,0.85)' }}>
                   {t('aboutPageFull.opsHowText')}
                 </p>
@@ -462,22 +451,22 @@ const AboutPage = () => {
               style={{
                 display: 'inline-block',
                 padding: '16px 36px',
-                background: '#D4891A',
+                background: '#FAA747',
                 color: '#fff',
                 borderRadius: '9999px',
                 textDecoration: 'none',
                 fontWeight: 600,
                 fontSize: '1.1rem',
-                boxShadow: '0 4px 14px rgba(212, 137, 26, 0.3)',
+                boxShadow: '0 4px 14px rgba(250, 167, 71, 0.3)',
                 transition: 'transform 0.2s, background 0.2s',
               }}
               onMouseEnter={e => {
                 e.currentTarget.style.transform = 'scale(1.05)';
-                e.currentTarget.style.background = '#b87514';
+                e.currentTarget.style.background = '#D08B3B';
               }}
               onMouseLeave={e => {
                 e.currentTarget.style.transform = 'scale(1)';
-                e.currentTarget.style.background = '#D4891A';
+                e.currentTarget.style.background = '#FAA747';
               }}
             >
               {t('aboutPageFull.cta')}

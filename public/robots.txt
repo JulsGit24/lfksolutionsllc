@@ -1,0 +1,50 @@
+# robots.txt — LFK Solutions, LLC
+# Replaces the Jobber platform default noted in the SEO audit (Section 5).
+# Update the Sitemap URL when the real domain is registered (SEO-01).
+
+User-agent: *
+Allow: /
+
+# Build artefacts and source maps — no ranking value, wasted crawl budget.
+Disallow: /*.map$
+
+# ── AI / answer-engine crawlers ────────────────────────────────────────────
+# Explicitly allowed. These are the crawlers behind ChatGPT, Claude, Perplexity
+# and Google's AI surfaces; being quotable by them is the point of the companion
+# AEO and GEO work. Remove a block below only if the business decides it does
+# not want to appear in that assistant.
+
+User-agent: GPTBot
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Applebot
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
+Sitemap: https://lfksolutions.com/sitemap.xml

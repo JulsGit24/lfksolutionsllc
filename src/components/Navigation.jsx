@@ -121,7 +121,6 @@ const Navigation = () => {
       dropdown: [
         { href: '/services#residential', label: t('hero.residential') },
         { href: '/services#commercial', label: t('hero.commercial') },
-        { href: '/services#remodeling', label: t('servicesPage.section3Label') }
       ]
     },
     { id: 'whyUs', href: '/why-us', label: t('nav.whyUs'), isRouterLink: true },
@@ -210,30 +209,32 @@ const Navigation = () => {
           z-index: 2;
           text-decoration: none;
         }
-        /* Logo: always white, only charcoal when over white bg (scrolled) */
-        .ib-logo img {
-          height: 36px;
-          width: auto;
+        /* Logo: white lockup over the hero, green lockup once the white bar shows.
+           The two brand variants are cross-faded rather than inverted with a filter —
+           inverting would push the orange chevron off-brand (it would read blue). */
+        .ib-logo-stack {
+          position: relative;
           display: block;
-          transition: filter 0.4s ease;
         }
-        /* Mobile: on glass pill bg (over hero), logo is white. On scrolled (white pill), logo is dark */
-        @media (max-width: 1024px) {
-          .ib-logo img { filter: none; }
-          .ib-header.is-scrolled .ib-logo img { filter: invert(1); }
+        .ib-logo img {
+          height: 42px;
+          width: 42px;
+          object-fit: contain;
+          display: block;
+          transition: opacity 0.4s ease;
         }
-        /* Desktop: logo stays white over hero */
-        @media (min-width: 1025px) {
-          .ib-logo img { filter: none; }
+        .ib-logo-stack .ib-logo-dark {
+          position: absolute;
+          top: 0;
+          left: 0;
+          opacity: 0;
         }
-        /* On scroll (white bg visible), logo goes charcoal */
-        .ib-header.is-scrolled .ib-logo img {
-          filter: invert(1);
-        }
+        .ib-header.is-scrolled .ib-logo-stack .ib-logo-light { opacity: 0; }
+        .ib-header.is-scrolled .ib-logo-stack .ib-logo-dark { opacity: 1; }
         .ib-logo-pill {
           position: absolute;
           top: 50%; left: 50%;
-          width: calc(100% + 28px);
+          width: 54px;
           height: 54px;
           background: rgba(255,255,255,0.8);
           backdrop-filter: blur(14px);
@@ -302,7 +303,7 @@ const Navigation = () => {
           align-items: center;
           padding: 8px 17px;
           border-radius: 8px;
-          background: #1d1d1f;
+          background: var(--primary);
           color: #fff;
           font-size: clamp(0.75rem, calc(0.75rem + 0.002 * (100vw - 440px)), 0.875rem);
           font-weight: 400;
@@ -316,7 +317,7 @@ const Navigation = () => {
           cursor: pointer;
         }
         .ib-cta:hover {
-          background: #333;
+          background: var(--primary-hover);
         }
 
         /* ── Language toggle ── */
@@ -380,7 +381,7 @@ const Navigation = () => {
         }
         .ib-dropdown-link:hover {
           background: rgba(0,0,0,0.05);
-          color: #D4891A;
+          color: #FAA747;
         }
         /* Dropdown glass mode (when navbar is glass / not scrolled) */
         @media (min-width: 1025px) {
@@ -396,7 +397,7 @@ const Navigation = () => {
           }
           .ib-header:not(.is-scrolled) .ib-dropdown-link:hover {
             background: rgba(255,255,255,0.15);
-            color: #D4891A;
+            color: #FAA747;
           }
         }
 
@@ -430,10 +431,10 @@ const Navigation = () => {
           .ib-header.is-scrolled .ib-lang:hover { background: rgba(0,0,0,0.05); }
           
           /* CTA */
-          .ib-cta { background: rgba(255,255,255,0.2); color: #fff; }
-          .ib-cta:hover { background: rgba(255,255,255,0.35); }
-          .ib-header.is-scrolled .ib-cta { background: #1d1d1f; color: #fff; }
-          .ib-header.is-scrolled .ib-cta:hover { background: #333; }
+          .ib-cta { background: var(--primary); color: #fff; }
+          .ib-cta:hover { background: var(--primary-hover); }
+          .ib-header.is-scrolled .ib-cta { background: var(--primary); color: #fff; }
+          .ib-header.is-scrolled .ib-cta:hover { background: var(--primary-hover); }
         }
         @media (min-width: 1025px) {
           .ib-hamburger { display: none; }
@@ -522,7 +523,7 @@ const Navigation = () => {
           text-decoration: none;
           transition: color 0.3s ease;
         }
-        .ib-mobile-link:hover { color: #D4891A; }
+        .ib-mobile-link:hover { color: #FAA747; }
         .ib-mobile-sub {
           display: flex;
           flex-direction: column;
@@ -549,6 +550,21 @@ const Navigation = () => {
           text-decoration: underline;
           text-underline-offset: 4px;
         }
+        /* Free Estimate in the mobile menu — solid brand green, matching the
+           desktop header CTA rather than reading as a plain text link. */
+        .ib-mobile-cta a.ib-mobile-estimate {
+          background: var(--primary);
+          color: #fff;
+          text-decoration: none;
+          padding: 14px 28px;
+          border-radius: 8px;
+          font-weight: 600;
+          text-align: center;
+          width: 100%;
+          max-width: 200px;
+          transition: background 0.3s ease;
+        }
+        .ib-mobile-cta a.ib-mobile-estimate:hover { background: var(--primary-hover); }
       `}</style>
 
       {/* ──── Header bar ──── */}
@@ -558,7 +574,10 @@ const Navigation = () => {
         {/* Logo with frosted pill behind on scroll */}
         <Link to="/" className="ib-logo">
           <div className="ib-logo-pill" />
-          <img src="/assets/logo-white.svg" alt="LFK Solutions LLC" />
+          <span className="ib-logo-stack">
+            <img className="ib-logo-light" src="/assets/brand/logo-badge-white.svg" alt="LFK Solutions LLC" />
+            <img className="ib-logo-dark" src="/assets/brand/logo-badge.svg" alt="" aria-hidden="true" />
+          </span>
         </Link>
 
         {/* Desktop menu pill */}
@@ -575,7 +594,7 @@ const Navigation = () => {
             href="tel:7038594908"
             className="ib-emergency"
           >
-            Emergency Plumbing
+            {t('hero.ctaEmergency')}
           </a>
 
           <a
@@ -671,9 +690,15 @@ const Navigation = () => {
               fontSize: '1.1rem', textTransform: 'uppercase', textDecoration: 'none',
               fontWeight: 600, textAlign: 'center', width: '100%', maxWidth: '200px'
             }}>
-            Emergency Plumbing
+            {t('hero.ctaEmergency')}
           </a>
-          <a href={JOBBER_URL} target="_blank" rel="noopener noreferrer" onClick={() => setMenuOpen(false)}>
+          <a
+            href={JOBBER_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="ib-mobile-estimate"
+            onClick={() => setMenuOpen(false)}
+          >
             {t('nav.freeEstimate')}
           </a>
         </div>

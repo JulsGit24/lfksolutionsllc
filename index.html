@@ -3,15 +3,183 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>LFK Solutions LLC</title>
-    <link rel="icon" type="image/svg+xml" href="/assets/LFK_icon.svg" />
-    <!-- Preconnect to Google Fonts -->
+
+    <!--
+      STATIC SEO BASELINE.
+
+      Everything below ships in the raw HTML response, so crawlers that do not
+      execute JavaScript — most AI crawlers, some social scrapers — still get the
+      business identity and the homepage's positioning. This is the floor that
+      BUILD REQUIREMENT SEO-09 asks for on a JS-rendered site.
+
+      src/components/Seo.jsx then overrides title/description/canonical/OG per
+      route for clients that DO run JS. Keep the homepage values here in sync
+      with PAGE_META.home in src/seo/pageMeta.js.
+
+      The absolute URLs below assume the domain from BUILD REQUIREMENT SEO-01.
+      Update every occurrence of https://lfksolutions.com when the real domain
+      is registered (and set VITE_SITE_URL to match at build time).
+    -->
+    <title>Plumbing &amp; Remodeling in Stafford, VA | LFK Solutions LLC</title>
+    <meta
+      name="description"
+      content="Licensed Master Plumber serving Stafford and the DMV since 2015. Plumbing, bathroom and kitchen remodeling. Free estimates — call (703) 859-4908."
+    />
+    <link rel="canonical" href="https://lfksolutions.com/" />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
+    <meta name="theme-color" content="#003E1E" />
+    <meta name="format-detection" content="telephone=no" />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="LFK Solutions, LLC" />
+    <meta property="og:title" content="Plumbing &amp; Remodeling in Stafford, VA | LFK Solutions LLC" />
+    <meta property="og:description" content="Licensed Master Plumber serving Stafford and the DMV since 2015. Plumbing, bathroom and kitchen remodeling. Free estimates — call (703) 859-4908." />
+    <meta property="og:url" content="https://lfksolutions.com/" />
+    <meta property="og:image" content="https://lfksolutions.com/assets/home/featured/res_plumbing_1.jpeg" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:locale:alternate" content="es_US" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Plumbing &amp; Remodeling in Stafford, VA | LFK Solutions LLC" />
+    <meta name="twitter:description" content="Licensed Master Plumber serving Stafford and the DMV since 2015. Free estimates — call (703) 859-4908." />
+    <meta name="twitter:image" content="https://lfksolutions.com/assets/home/featured/res_plumbing_1.jpeg" />
+
+    <link rel="icon" type="image/svg+xml" href="/assets/brand/LFK_icon.svg" />
+    <link rel="apple-touch-icon" href="/assets/brand/icon-180.png" />
+
+    <!-- Fonts: preconnected and display=swap, per BUILD REQUIREMENT SEO-12 -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!--
+      BUILD REQUIREMENT SEO-10 — anchor entity, served statically.
+      `geo`, `openingHoursSpecification` and `sameAs` are intentionally absent:
+      they are unconfirmed, and publishing invented values in schema is a factual
+      claim by the business. Add them here AND in src/seo/siteConfig.js once the
+      Google Business Profile is verified.
+    -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": ["Plumber", "GeneralContractor"],
+          "@id": "https://lfksolutions.com/#business",
+          "name": "LFK Solutions, LLC",
+          "alternateName": "LFK Solutions",
+          "url": "https://lfksolutions.com/",
+          "telephone": "+1-703-859-4908",
+          "email": "lfksolutions4u@gmail.com",
+          "foundingDate": "2015",
+          "priceRange": "$$",
+          "address": {
+            "@type": "PostalAddress",
+            "streetAddress": "405 Greenstead Drive",
+            "addressLocality": "Stafford",
+            "addressRegion": "VA",
+            "postalCode": "22554",
+            "addressCountry": "US"
+          },
+          "areaServed": [
+            { "@type": "Place", "name": "Stafford, VA" },
+            { "@type": "Place", "name": "Fredericksburg, VA" },
+            { "@type": "Place", "name": "Woodbridge, VA" },
+            { "@type": "Place", "name": "Arlington, VA" },
+            { "@type": "Place", "name": "Alexandria, VA" },
+            { "@type": "Place", "name": "Fairfax, VA" },
+            { "@type": "Place", "name": "Washington, DC" },
+            { "@type": "Place", "name": "Montgomery County, MD" },
+            { "@type": "Place", "name": "Prince George's County, MD" }
+          ],
+          "hasCredential": [
+            {
+              "@type": "EducationalOccupationalCredential",
+              "credentialCategory": "license",
+              "name": "DC General Contractor"
+            },
+            {
+              "@type": "EducationalOccupationalCredential",
+              "credentialCategory": "license",
+              "name": "VA Class A Contractor"
+            },
+            {
+              "@type": "EducationalOccupationalCredential",
+              "credentialCategory": "license",
+              "name": "VA Master Plumber & Gasfitter"
+            },
+            {
+              "@type": "EducationalOccupationalCredential",
+              "credentialCategory": "license",
+              "name": "DC Master Plumber & Gasfitter"
+            },
+            {
+              "@type": "EducationalOccupationalCredential",
+              "credentialCategory": "license",
+              "name": "WSSC Master Plumber & Gasfitter"
+            },
+            {
+              "@type": "EducationalOccupationalCredential",
+              "credentialCategory": "license",
+              "name": "Bonded and insured for residential and commercial work"
+            }
+          ],
+          "hasOfferCatalog": {
+            "@type": "OfferCatalog",
+            "name": "Plumbing and remodeling services",
+            "itemListElement": [
+              { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Residential Plumbing" } },
+              { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Commercial Plumbing" } },
+              { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Backflow Prevention and Testing" } },
+              { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Water Heater Installation and Repair" } },
+              { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Bathroom Remodeling" } },
+              { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Kitchen Remodeling" } },
+              { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Home Additions and Renovations" } },
+              { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Emergency Plumbing Repairs" } }
+            ]
+          }
+        },
+        {
+          "@type": "WebSite",
+          "@id": "https://lfksolutions.com/#website",
+          "url": "https://lfksolutions.com/",
+          "name": "LFK Solutions, LLC",
+          "publisher": { "@id": "https://lfksolutions.com/#business" },
+          "inLanguage": ["en-US", "es-US"]
+        }
+      ]
+    }
+    </script>
   </head>
   <body>
     <div id="root"></div>
+
+    <!--
+      Content floor for non-JS crawlers. React replaces #root on boot, so this is
+      never seen by a real visitor, but a crawler that does not execute JS still
+      reads the business name, what it does, where it works, and how to call it
+      instead of an empty <div>.
+    -->
+    <noscript>
+      <h1>LFK Solutions, LLC — Plumbing &amp; Remodeling in Stafford, Virginia</h1>
+      <p>
+        Licensed Master Plumber serving Stafford, Fredericksburg and the wider DMV
+        (Washington DC, Virginia and Maryland) since 2015. Bonded and insured for
+        residential and commercial work.
+      </p>
+      <p>
+        Services: residential plumbing, commercial plumbing, backflow prevention and
+        testing, water heater installation and repair, bathroom remodeling, kitchen
+        remodeling, home additions and renovations, and emergency plumbing repairs.
+      </p>
+      <p>
+        405 Greenstead Drive, Stafford, VA 22554 —
+        <a href="tel:+17038594908">(703) 859-4908</a>. Free estimates.
+      </p>
+    </noscript>
+
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>

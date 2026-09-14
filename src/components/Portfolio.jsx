@@ -1,39 +1,95 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 
-const CARD_W = 420;
-const CARD_H = 300;
-const RADIUS = 520;
-
 const IMAGE_SRCS = [
-  '/assets/hero-bathroom-remodel.png',
-  '/assets/residential-plumbing.png',
-  '/assets/commercial_pipelines.png',
-  '/assets/remodeling.png',
-  '/assets/gallery-tile.png',
-  '/assets/bg_house_natural_pipes.png',
+  '/assets/home/featured/comm_plumbing_1.jpeg',
+  '/assets/home/featured/comm_plumbing_2.jpeg',
+  '/assets/home/featured/comm_plumbing_3.jpeg',
+  '/assets/home/featured/commercial-plumbing.png',
+  '/assets/home/featured/res_plumbing_1.jpeg',
+  '/assets/home/featured/res_plumbing_2.jpeg',
+  '/assets/home/featured/res_plumbing_3.jpeg',
+  '/assets/home/featured/res_plumbing_4.jpeg',
+  '/assets/home/featured/water-heater.png',
 ];
+
+// Radius needed so N cards of width `cardW` sit edge-to-edge around a ring without
+// overlapping, plus ~12% breathing room. Derived rather than hardcoded so adding or
+// removing images keeps the ring correctly spaced.
+const ringRadius = (cardW, count) =>
+  Math.round((cardW / 2) / Math.tan(Math.PI / count) * 1.12);
+
+const getResponsiveDimensions = (w, count) => {
+  // scrollVH = total section height. The first 100vh is the pinned viewport, the
+  // remainder is the scroll distance that drives the rotation.
+  let base;
+  if (w <= 480) base = { cardW: 210, cardH: 150, perspective: '1400px', scrollVH: 200 };
+  else if (w <= 768) base = { cardW: 280, cardH: 200, perspective: '2000px', scrollVH: 230 };
+  else if (w <= 1024) base = { cardW: 340, cardH: 240, perspective: '2800px', scrollVH: 260 };
+  else base = { cardW: 420, cardH: 300, perspective: '5000px', scrollVH: 280 };
+
+  return { ...base, radius: ringRadius(base.cardW, count) };
+};
 
 const Portfolio = () => {
   const { t } = useTranslation();
   const wrapperRef = useRef(null);
   const [modal, setModal] = useState(null);
+  const [dragOffset, setDragOffset] = useState(0);
+  const [isDragging, setIsDragging] = useState(false);
+  const dragStartX = useRef(0);
+  const currentDragOffset = useRef(0);
+
+  const cardCount = IMAGE_SRCS.length;
+
+  const [dims, setDims] = useState(() =>
+    getResponsiveDimensions(typeof window !== 'undefined' ? window.innerWidth : 1200, cardCount)
+  );
+
+  useEffect(() => {
+    const handleResize = () => {
+      setDims(getResponsiveDimensions(window.innerWidth, cardCount));
+    };
+    window.addEventListener('resize', handleResize, { passive: true });
+    return () => window.removeEventListener('resize', handleResize);
+  }, [cardCount]);
 
   const projects = t('portfolio.projects', { returnObjects: true });
-  const images = IMAGE_SRCS.map((src, i) => ({ src, title: projects[i] ?? '' }));
+  const images = IMAGE_SRCS.map((src, i) => ({ src, title: Array.isArray(projects) ? (projects[i % projects.length] ?? '') : '' }));
 
   const { scrollYProgress } = useScroll({
     target: wrapperRef,
     offset: ['start start', 'end end'],
   });
 
-  // Full 360° rotation over the scroll range — large perspective minimises depth scaling
-  const rotateY = useTransform(scrollYProgress, [0, 1], [0, -360]);
+  // Full 360° rotation over the scroll range + touch drag offset
+  const scrollRotateY = useTransform(scrollYProgress, [0, 1], [0, -360]);
+  const rotateY = useTransform(scrollRotateY, v => v + dragOffset);
+
+  const handleTouchStart = (e) => {
+    setIsDragging(true);
+    dragStartX.current = e.touches ? e.touches[0].clientX : e.clientX;
+    currentDragOffset.current = dragOffset;
+  };
+
+  const handleTouchMove = (e) => {
+    if (!isDragging) return;
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+    const diff = (clientX - dragStartX.current) * 0.4;
+    setDragOffset(currentDragOffset.current + diff);
+  };
+
+  const handleTouchEnd = () => {
+    setIsDragging(false);
+  };
 
   return (
+    // NOTE: no `overflow: hidden` on this section. An overflow-clipped ancestor makes
+    // itself the scroll container for `position: sticky` descendants, which silently
+    // stops the viewport below from pinning. The sticky element clips its own overflow.
     <section id="portfolio" style={{ position: 'relative' }}>
-      <div ref={wrapperRef} style={{ height: '280vh', position: 'relative' }}>
+      <div ref={wrapperRef} style={{ height: `${dims.scrollVH}vh`, position: 'relative' }}>
 
         {/* Sticky viewport */}
         <div
@@ -47,12 +103,18 @@ const Portfolio = () => {
             flexDirection: 'column',
             alignItems: 'center',
             justifyContent: 'center',
-            /* Large perspective value → minimal depth scaling on rotation */
-            perspective: '5000px',
+            perspective: dims.perspective,
+            touchAction: 'pan-y',
           }}
+          onMouseDown={handleTouchStart}
+          onMouseMove={handleTouchMove}
+          onMouseUp={handleTouchEnd}
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
         >
           {/* Header */}
-          <div style={{ position: 'absolute', top: '10%', zIndex: 10, textAlign: 'center' }}>
+          <div style={{ position: 'absolute', top: '8%', zIndex: 10, textAlign: 'center', padding: '0 16px' }}>
             <motion.div
               initial={{ opacity: 0, y: 24 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -62,17 +124,17 @@ const Portfolio = () => {
               <div style={{ color: 'rgba(29,29,31,0.5)', textTransform: 'uppercase', letterSpacing: '0.15em', marginBottom: '12px', fontSize: '0.8rem', fontWeight: 500 }}>
                 {t('portfolio.sectionLabel')}
               </div>
-              <h2 style={{ color: '#1d1d1f', fontSize: 'clamp(2rem, 4vw, 3.5rem)', fontWeight: 600, lineHeight: 1.1 }}>
+              <h2 style={{ color: '#1d1d1f', fontSize: 'clamp(1.8rem, 4vw, 3.5rem)', fontWeight: 600, lineHeight: 1.1 }}>
                 {t('portfolio.title')}
               </h2>
             </motion.div>
           </div>
 
-          {/* 3D ring — rotates via scroll, no scale applied anywhere */}
+          {/* 3D ring — rotates via scroll & touch, dynamically responsive to viewport */}
           <motion.div
             style={{
-              width: `${CARD_W}px`,
-              height: `${CARD_H}px`,
+              width: `${dims.cardW}px`,
+              height: `${dims.cardH}px`,
               position: 'relative',
               transformStyle: 'preserve-3d',
               rotateY,
@@ -91,40 +153,31 @@ const Portfolio = () => {
                     left: 0,
                     width: '100%',
                     height: '100%',
-                    transform: `rotateY(${angle}deg) translateZ(${RADIUS}px)`,
+                    transform: `rotateY(${angle}deg) translateZ(${dims.radius}px)`,
                     backfaceVisibility: 'visible',
-                    borderRadius: '20px',
+                    borderRadius: '16px',
                     overflow: 'hidden',
-                    boxShadow: '0 25px 50px rgba(0,0,0,0.55)',
+                    boxShadow: '0 20px 40px rgba(0,0,0,0.45)',
                     cursor: 'pointer',
                     padding: 0,
                     border: 'none',
                     background: 'none',
+                    userSelect: 'none',
                   }}
                 >
                   <img
                     src={img.src}
                     alt={img.title}
-                    style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+                    style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', pointerEvents: 'none' }}
                     loading="lazy"
                   />
                   <div
                     style={{
-                      position: 'absolute', inset: 0,
-                      background: 'linear-gradient(to top, rgba(255,255,255,0.85) 0%, transparent 55%)',
-                      display: 'flex', alignItems: 'flex-end',
-                      padding: '20px 24px',
-                    }}
-                  >
-                    <span style={{ color: '#1d1d1f', fontWeight: 500, fontSize: '1.05rem' }}>{img.title}</span>
-                  </div>
-                  <div
-                    style={{
-                      position: 'absolute', top: '14px', right: '14px',
-                      background: 'rgba(255,255,255,0.7)', backdropFilter: 'blur(8px)',
-                      borderRadius: '8px', padding: '5px 9px',
-                      color: 'rgba(29,29,31,0.78)', fontSize: '0.68rem',
-                      fontWeight: 500, letterSpacing: '0.06em', textTransform: 'uppercase',
+                      position: 'absolute', top: '10px', right: '10px',
+                      background: 'rgba(255,255,255,0.75)', backdropFilter: 'blur(8px)',
+                      borderRadius: '6px', padding: '4px 8px',
+                      color: 'rgba(29,29,31,0.85)', fontSize: '0.62rem',
+                      fontWeight: 600, letterSpacing: '0.05em', textTransform: 'uppercase',
                     }}
                   >
                     ↗ Expand
@@ -173,16 +226,13 @@ const Portfolio = () => {
                 alt={modal.title}
                 style={{ display: 'block', maxWidth: '90vw', maxHeight: '82vh', objectFit: 'contain' }}
               />
-              {/* Title bar */}
               <div
                 style={{
                   position: 'absolute', bottom: 0, left: 0, right: 0,
-                  background: 'linear-gradient(to top, rgba(255,255,255,0.9) 0%, transparent 100%)',
                   padding: '24px 24px 20px',
-                  display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end',
+                  display: 'flex', justifyContent: 'flex-end', alignItems: 'flex-end',
                 }}
               >
-                <span style={{ color: '#1d1d1f', fontSize: '1.2rem', fontWeight: 600 }}>{modal.title}</span>
                 <button
                   onClick={() => setModal(null)}
                   aria-label={t('portfolio.close')}

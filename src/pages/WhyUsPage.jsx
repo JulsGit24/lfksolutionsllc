@@ -1,6 +1,9 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
+import Seo from '../components/Seo';
+import { PAGE_META } from '../seo/pageMeta';
+import { breadcrumbSchema } from '../seo/schema';
 
 // Shared animation variants
 const fadeInUp = {
@@ -19,7 +22,17 @@ const WhyUsPage = () => {
 
   return (
     <div style={{ paddingTop: 'clamp(80px, 10vw, 120px)', background: '#fbfbf9' }}>
-      
+      <Seo
+        {...PAGE_META.whyUs}
+        image="/assets/why-us/honesty.png"
+        schemas={[
+          breadcrumbSchema([
+            { name: 'Home', path: '/' },
+            { name: 'Why Us', path: '/why-us' },
+          ]),
+        ]}
+      />
+
       {/* 1. Hero / Intro Section */}
       <section style={{ padding: 'clamp(40px, 8vw, 80px) 24px 0', textAlign: 'center', background: '#fbfbf9' }}>
         <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
@@ -55,7 +68,7 @@ const WhyUsPage = () => {
               </p>
             </motion.div>
             <motion.div variants={fadeInUp} style={{ flex: '1 1 400px', borderRadius: '16px', overflow: 'hidden', aspectRatio: '4/3' }}>
-              <img src="/assets/val_trust_1783286217181.png" alt="Trust and Expertise" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+              <img src="/assets/about/values/trust.png" alt="Trust and Expertise" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
             </motion.div>
           </motion.div>
 
@@ -73,7 +86,7 @@ const WhyUsPage = () => {
               </p>
             </motion.div>
             <motion.div variants={fadeInUp} style={{ flex: '1 1 400px', borderRadius: '16px', overflow: 'hidden', aspectRatio: '4/3' }}>
-              <img src="/assets/residential-plumbing.png" alt="Respect for Your Home" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+              <img src="/assets/services/residential/residential-plumbing.png" alt="Respect for Your Home" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
             </motion.div>
           </motion.div>
 
@@ -91,7 +104,7 @@ const WhyUsPage = () => {
               </p>
             </motion.div>
             <motion.div variants={fadeInUp} style={{ flex: '1 1 400px', borderRadius: '16px', overflow: 'hidden', aspectRatio: '4/3' }}>
-              <img src="/assets/val_honesty_1783286197363.png" alt="Code Compliance and Safety" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+              <img src="/assets/why-us/honesty.png" alt="Code Compliance and Safety" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
             </motion.div>
           </motion.div>
 
@@ -107,7 +120,7 @@ const WhyUsPage = () => {
           <motion.p variants={fadeInUp} style={{ fontSize: '1.15rem', lineHeight: 1.75, color: 'rgba(29,29,31,0.7)', marginBottom: '32px' }}>
             {t('whyUsPageFull.ctaBody')}
           </motion.p>
-          <motion.h4 variants={fadeInUp} style={{ fontSize: '1.25rem', fontWeight: 600, marginBottom: '32px', color: '#D4891A' }}>
+          <motion.h4 variants={fadeInUp} style={{ fontSize: '1.25rem', fontWeight: 600, marginBottom: '32px', color: '#FAA747' }}>
             {t('whyUsPageFull.ctaSub')}
           </motion.h4>
           
